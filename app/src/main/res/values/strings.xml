@@ -8,4 +8,9 @@
     <string name="registration">Registrovať sa</string>
     <string name="passwordAgain">Zopakujte heslo</string>
     <string name="birthday">Dátum narodenia</string>
+    <string name="logOut">Odhlásiť sa</string>
+    <string name="changePassword">Zmeniť heslo</string>
+    <string name="userName">Meno používateľa</string>
+    <string name="loginEmail">"Email prihláseného"</string>
+    <string name="newPassword">Nové heslo</string>
 </resources>
