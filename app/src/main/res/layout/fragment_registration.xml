@@ -13,15 +13,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:backgroundTint="#FFFFFF"
-        tools:context=".RegistrationFragment">
+        tools:context=".RegistrationFragment"
+        android:id="@+id/registration_layout"
+        android:background="@drawable/gradient_animation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/registration_layout"
-            android:background="@drawable/gradient_animation">
+            android:background="@drawable/ic_wave_1">
 
             <TextView
                 android:id="@+id/name"
