@@ -62,20 +62,25 @@ class RegistrationFragment : Fragment() {
             Log.i("INFO", birth.toString())
 
 
-            if (name == null || password == null || passwordCheck == null || birth == null) {
+            if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
                 binding.messageRegister.visibility = View.VISIBLE;
                 binding.messageRegister.text = "Musíte vyplniť všetky polia.";
 
             }
 
-            if (password.toString() != passwordCheck.toString()) {
+            else if (password.toString() != passwordCheck.toString()) {
                 binding.messageRegister.visibility = View.VISIBLE;
                 binding.messageRegister.text = "Heslá sa nezhodujú.";
             }
 
-            if (!isEmailValid(name.toString())) {
+            else if (!isEmailValid(name.toString())) {
                 binding.messageRegister.visibility = View.VISIBLE;
                 binding.messageRegister.text = "E-mail nie je zadaný v správnom tvare.";
+            }
+
+            else {
+                binding.messageRegister.visibility = View.GONE;
+                binding.messageRegister.text = "";
             }
 
 // Instantiate the RequestQueue.
@@ -83,6 +88,9 @@ class RegistrationFragment : Fragment() {
             val url = "http://api.mcomputing.eu/mobv/service.php"
             val jsonBody = JSONObject()
             jsonBody.put("action", "register")
+            jsonBody.put("Content-Type", "application/json")
+            jsonBody.put("Cache-Control", "no-cache")
+            jsonBody.put("Accept", "application/json")
             jsonBody.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
             jsonBody.put("email", name.toString())
             jsonBody.put("username", name.toString())
@@ -94,10 +102,10 @@ class RegistrationFragment : Fragment() {
 // Request a string response from the provided URL.
             val jsonObjectRequest = JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 Response.Listener { response ->
-                    System.out.print(response)
+                    Log.i("INFO", response.toString());
                 },
                 Response.ErrorListener { error ->
-                    // TODO: Handle error
+                    Log.i("ERROR", error.toString());
                 }
             )
 
