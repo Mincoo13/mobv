@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -44,6 +45,10 @@ class RegistrationFragment : Fragment() {
 
         // Set the onClickListener for the submitButton
 
+        binding.toLoginButton.setOnClickListener { view : View ->
+            view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+        }
+
         binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
 
@@ -56,10 +61,21 @@ class RegistrationFragment : Fragment() {
             Log.i("INFO", passwordCheck.toString())
             Log.i("INFO", birth.toString())
 
+
+            if (name == null || password == null || passwordCheck == null || birth == null) {
+                binding.messageRegister.visibility = View.VISIBLE;
+                binding.messageRegister.text = "Musíte vyplniť všetky polia.";
+
+            }
+
             if (password.toString() != passwordCheck.toString()) {
                 binding.messageRegister.visibility = View.VISIBLE;
-                binding.messageRegister.text = "Hesla sa nezhodujú.";
+                binding.messageRegister.text = "Heslá sa nezhodujú.";
+            }
 
+            if (!isEmailValid(name.toString())) {
+                binding.messageRegister.visibility = View.VISIBLE;
+                binding.messageRegister.text = "E-mail nie je zadaný v správnom tvare.";
             }
 
 // Instantiate the RequestQueue.
@@ -90,5 +106,9 @@ class RegistrationFragment : Fragment() {
 
         }
         return binding.root
+    }
+
+    fun isEmailValid(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }

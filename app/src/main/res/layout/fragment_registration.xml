@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_wave_1">
+            android:background="@drawable/ic_wave_4">
 
             <TextView
                 android:id="@+id/name"
@@ -146,18 +146,31 @@
 
             <Button
                 android:id="@+id/registerButton"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@android:style/Widget.Holo.Button.Borderless"
                 android:layout_width="172dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="157dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="19dp"
-                android:layout_marginEnd="166dp"
+                android:layout_marginEnd="64dp"
                 android:layout_marginBottom="200dp"
                 android:text="@string/registration"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/toLoginButton"
                 app:layout_constraintTop_toBottomOf="@+id/messageRegister" />
+
+            <Button
+                android:id="@+id/toLoginButton"
+                style="@android:style/Widget.Holo.Button.Borderless"
+                android:layout_width="46dp"
+                android:layout_height="49dp"
+                android:layout_marginStart="32dp"
+                android:background="@mipmap/ic_back_arrow_foreground"
+                android:text=" "
+                app:layout_constraintBaseline_toBaselineOf="@+id/registerButton"
+                app:layout_constraintEnd_toStartOf="@+id/registerButton"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
