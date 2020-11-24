@@ -53,4 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    //circle profile Image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 }
