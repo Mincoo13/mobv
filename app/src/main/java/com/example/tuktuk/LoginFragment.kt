@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.example.tuktuk.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
+import java.lang.RuntimeException
 
 /**
  * A simple [Fragment] subclass.
@@ -30,6 +31,9 @@ class LoginFragment : Fragment() {
         animDrawable.setExitFadeDuration(5000)
         animDrawable.start()
 
+        binding.loginButton.setOnClickListener {
+            throw RuntimeException("App Crashed");
+        }
 
         binding.toRegistrationButton.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
