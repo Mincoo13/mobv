@@ -1,5 +1,6 @@
 package com.example.tuktuk
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,7 @@ import org.json.JSONObject
  */
 class RegistrationFragment : Fragment() {
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +55,12 @@ class RegistrationFragment : Fragment() {
             Log.i("INFO", password.toString())
             Log.i("INFO", passwordCheck.toString())
             Log.i("INFO", birth.toString())
+
+            if (password.toString() != passwordCheck.toString()) {
+                binding.messageRegister.visibility = View.VISIBLE;
+                binding.messageRegister.text = "Hesla sa nezhodujú.";
+
+            }
 
 // Instantiate the RequestQueue.
             val queue = Volley.newRequestQueue(view.context)
