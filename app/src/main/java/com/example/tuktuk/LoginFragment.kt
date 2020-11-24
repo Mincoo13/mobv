@@ -32,7 +32,7 @@ class LoginFragment : Fragment() {
         animDrawable.start()
 
         binding.loginButton.setOnClickListener {
-            throw RuntimeException("App Crashed");
+            throw RuntimeException("App Crashed")
         }
 
         binding.toRegistrationButton.setOnClickListener { view : View ->

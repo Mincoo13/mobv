@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_wave_4">
+            android:background="@drawable/ic_wave_6">
 
             <TextView
                 android:id="@+id/name"
@@ -166,7 +166,7 @@
                 android:layout_width="46dp"
                 android:layout_height="49dp"
                 android:layout_marginStart="32dp"
-                android:background="@mipmap/ic_back_arrow_foreground"
+                android:background="@mipmap/ic_down_arrow_foreground"
                 android:text=" "
                 app:layout_constraintBaseline_toBaselineOf="@+id/registerButton"
                 app:layout_constraintEnd_toStartOf="@+id/registerButton"
