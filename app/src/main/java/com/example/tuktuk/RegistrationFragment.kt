@@ -1,5 +1,6 @@
 package com.example.tuktuk
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,15 +34,21 @@ class RegistrationFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentRegistrationBinding>(inflater,
             R.layout.fragment_registration,container,false)
+
+        val animDrawable = binding.registrationLayout.background as AnimationDrawable
+        animDrawable.setEnterFadeDuration(10)
+        animDrawable.setExitFadeDuration(5000)
+        animDrawable.start()
+
         // Set the onClickListener for the submitButton
 
-        binding.button3.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
+        binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
 
-            val name = binding.editTextTextPersonName.text;
-            val password = binding.editTextTextPassword2.text;
-            val passwordCheck = binding.editTextTextPassword3.text;
-            val birth = binding.editTextNumber.text;
+            val name = binding.nameInput.text;
+            val password = binding.passwordInput.text;
+            val passwordCheck = binding.passwordCheckInput.text;
+            val birth = binding.ageInput.text;
             Log.i("INFO", name.toString())
             Log.i("INFO", password.toString())
             Log.i("INFO", passwordCheck.toString())
