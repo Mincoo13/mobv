@@ -13,4 +13,5 @@
     <string name="userName">Meno používateľa</string>
     <string name="loginEmail">"Email prihláseného"</string>
     <string name="newPassword">Nové heslo</string>
+    <string name="nameLabel">Meno</string>
 </resources>
