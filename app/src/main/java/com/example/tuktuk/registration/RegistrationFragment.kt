@@ -1,4 +1,4 @@
-package com.example.tuktuk
+package com.example.tuktuk.registration
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
@@ -7,17 +7,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.tuktuk.R
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import org.json.JSONObject
-
-
-
 
 
 /**

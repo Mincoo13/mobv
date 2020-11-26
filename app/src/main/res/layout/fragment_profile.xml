@@ -6,13 +6,13 @@
 <data>
         <variable
             name="registration"
-            type="com.example.tuktuk.RegistrationFragment" />
+            type="com.example.tuktuk.registration.RegistrationFragment" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RegistrationFragment"
+        tools:context=".registration.RegistrationFragment"
         android:id="@+id/registration_layout"
         android:background="@drawable/gradient_animation">
 
