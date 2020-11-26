@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "810438953486",
+    "firebase_url": "https://tuktuk-cfb16.firebaseio.com",
+    "project_id": "tuktuk-cfb16",
+    "storage_bucket": "tuktuk-cfb16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810438953486:android:8b06f94cee57d436ba8a5f",
+        "android_client_info": {
+          "package_name": "com.example.tuktuk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810438953486-vs8nvp8rp912scrtrvbciha0q3q941aj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFRN0ab08M6NLotwbLd6MCqdN3yHeNoOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810438953486-vs8nvp8rp912scrtrvbciha0q3q941aj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

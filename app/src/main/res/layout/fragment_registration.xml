@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_wave_4">
+            android:background="@drawable/ic_wave_6">
 
             <TextView
                 android:id="@+id/name"
@@ -28,11 +28,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/nameLabel"
+                android:textAlignment="textEnd"
+                app:layout_constraintBaseline_toBaselineOf="@+id/nameInput"
+                app:layout_constraintEnd_toStartOf="@+id/nameInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/email"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/nameInput"
-                app:layout_constraintEnd_toStartOf="@+id/nameInput"
+                app:layout_constraintBaseline_toBaselineOf="@+id/emailInput"
+                app:layout_constraintEnd_toStartOf="@+id/emailInput"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
@@ -77,18 +90,35 @@
             <EditText
                 android:id="@+id/nameInput"
                 android:layout_width="0dp"
-                android:layout_height="46dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="200dp"
                 android:layout_marginEnd="32dp"
-                android:layout_marginBottom="15dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+
+                app:layout_constraintBottom_toTopOf="@+id/emailInput"
+
                 android:text="@={registrationViewModel.email}"
-                app:layout_constraintBottom_toTopOf="@+id/passwordInput"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/name"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/emailInput"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="15dp"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                app:layout_constraintBottom_toTopOf="@+id/passwordInput"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/email"
+                app:layout_constraintTop_toBottomOf="@+id/nameInput" />
 
             <EditText
                 android:id="@+id/passwordInput"
@@ -103,7 +133,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/passwordCheckInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/password"
-                app:layout_constraintTop_toBottomOf="@+id/nameInput" />
+                app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
             <EditText
                 android:id="@+id/passwordCheckInput"
@@ -171,8 +201,7 @@
                 android:layout_width="46dp"
                 android:layout_height="49dp"
                 android:layout_marginStart="32dp"
-                android:background="@mipmap/ic_back_arrow_foreground"
-                android:text=" "
+                android:background="@mipmap/ic_down_arrow_foreground"
                 app:layout_constraintBaseline_toBaselineOf="@+id/registerButton"
                 app:layout_constraintEnd_toStartOf="@+id/registerButton"
                 app:layout_constraintStart_toStartOf="parent" />
