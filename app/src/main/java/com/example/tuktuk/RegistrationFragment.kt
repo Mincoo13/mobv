@@ -97,7 +97,7 @@ class RegistrationFragment : Fragment() {
             jsonBodyExists.put("username", name.toString())
 
             // Request a string response from the provided URL.
-            val jsonObjectRequestExists = JsonObjectRequest(Request.Method.GET, url, jsonBodyExists,
+            val jsonObjectRequestExists = JsonObjectRequest(Request.Method.POST, url, jsonBodyExists,
                 { response ->
                     Log.i("INFO", response.toString())
                     Log.i("INFO", "Meno je k dispozicii")
