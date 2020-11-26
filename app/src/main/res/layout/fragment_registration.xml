@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="registration"
-            type="com.example.tuktuk.registration.RegistrationFragment" />
+            name="registrationViewModel"
+            type="com.example.tuktuk.registration.RegistrationViewModel" />
     </data>
 
     <FrameLayout
@@ -96,7 +96,11 @@
                 android:layout_marginEnd="32dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+
                 app:layout_constraintBottom_toTopOf="@+id/emailInput"
+
+                android:text="@={registrationViewModel.email}"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/name"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -125,6 +129,7 @@
                 android:layout_marginBottom="15dp"
                 android:ems="10"
                 android:inputType="textPassword"
+                android:text="@={registrationViewModel.password}"
                 app:layout_constraintBottom_toTopOf="@+id/passwordCheckInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/password"
@@ -139,6 +144,7 @@
                 android:layout_marginBottom="15dp"
                 android:ems="10"
                 android:inputType="textPassword"
+                android:text="@={registrationViewModel.passwordCheck}"
                 app:layout_constraintBottom_toTopOf="@+id/ageInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/passwordCheck"
@@ -153,6 +159,7 @@
                 android:layout_marginBottom="16dp"
                 android:ems="10"
                 android:inputType="date"
+                android:text="@={registrationViewModel.age}"
                 app:layout_constraintBottom_toTopOf="@+id/messageRegister"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/age"
@@ -166,6 +173,7 @@
                 android:textAlignment="center"
                 android:textColor="?attr/colorError"
                 android:visibility="gone"
+                android:text="@={registrationViewModel.messageRegister}"
                 app:layout_constraintBottom_toTopOf="@+id/registerButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

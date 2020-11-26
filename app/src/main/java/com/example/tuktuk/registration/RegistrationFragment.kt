@@ -18,6 +18,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.tuktuk.R
+
+import com.example.tuktuk.database.UserDatabase
+import com.example.tuktuk.database.UserRepository
+
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -31,14 +35,36 @@ import org.json.JSONObject
  */
 class RegistrationFragment : Fragment() {
 
-    @SuppressLint("SetTextI18n")
+
+    /**
+     * Lazily initialize our [OverviewViewModel].
+     */
+    private val registrationViewModel: RegistrationViewModel by lazy {
+        val application = requireNotNull(this.activity).application
+        val dataSource = UserDatabase.getInstance(application).userDatabaseDao
+        ViewModelProvider(this, RegistrationViewModelFactory(dataSource, application)).get(RegistrationViewModel::class.java)
+    }
+
+  @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentRegistrationBinding>(inflater,
-            R.layout.fragment_registration,container,false)
+
+
+        val binding = FragmentRegistrationBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.registrationViewModel = registrationViewModel
+
+//        val database by lazy { UserDatabase.getInstance(application, applicationScope) }
+//        val repository by lazy { UserRepository(UserDatabase) }
+
+        // Get a reference to the ViewModel associated with this fragment.
+//        val registrationViewModel =
+//            ViewModelProvider(this, viewModelFactory).get(RegistrationViewModel::class.java)
+
+        binding.registrationViewModel = registrationViewModel
+
 
         val animDrawable = binding.registrationLayout.background as AnimationDrawable
         animDrawable.setEnterFadeDuration(10)
@@ -46,33 +72,42 @@ class RegistrationFragment : Fragment() {
         animDrawable.start()
 
         // Set the onClickListener for the submitButton
-
         binding.toLoginButton.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
 
+
+
+//        registrationViewModel.getRegisterUser().observe(this, Observer {
+//            showToas("Registracia uspesna")
+//        })
+//        registrationViewModel.navigateToProfile.observe(this, Observer { user ->
+//            user?.let {
+////                this.findNavController().navigate(
+////                    SleepTrackerFragmentDirections
+////                        .actionSleepTrackerFragmentToSleepQualityFragment(user.id))
+//
+//                registrationViewModel.doneNavigating()
+//            }
+//        })
+
         binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
 
-            val name = binding.nameInput.text
-            val email = binding.emailInput.text
-            val password = binding.passwordInput.text
-            val passwordCheck = binding.passwordCheckInput.text
-            val birth = binding.ageInput.text
-            Log.i("INFO", name.toString())
-            Log.i("INFO", email.toString())
-            Log.i("INFO", password.toString())
-            Log.i("INFO", passwordCheck.toString())
-            Log.i("INFO", birth.toString())
+            val name = binding.nameInput.text;
+            val password = binding.passwordInput.text;
+            val passwordCheck = binding.passwordCheckInput.text;
+            val birth = binding.ageInput.text;
 
+            if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
+                binding.messageRegister.visibility = View.VISIBLE;
+                binding.messageRegister.text = "Musíte vyplniť všetky polia.";
 
-            if (name.toString() == "" || email.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
-                binding.messageRegister.visibility = View.VISIBLE
-                binding.messageRegister.text = "Musíte vyplniť všetky polia."
 
             }
 
             else if (password.toString() != passwordCheck.toString()) {
+
                 binding.messageRegister.visibility = View.VISIBLE
                 binding.messageRegister.text = "Heslá sa nezhodujú."
             }
@@ -140,6 +175,7 @@ class RegistrationFragment : Fragment() {
 
 // Add the request to the RequestQueue.
             queue.add(jsonObjectRequestRegister)
+
 
         }
         return binding.root
