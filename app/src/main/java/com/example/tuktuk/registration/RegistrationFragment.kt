@@ -1,4 +1,4 @@
-package com.example.tuktuk
+package com.example.tuktuk.registration
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
@@ -7,15 +7,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.tuktuk.R
+import com.example.tuktuk.database.UserDatabase
+import com.example.tuktuk.database.UserRepository
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import org.json.JSONObject
 
 
@@ -29,14 +36,32 @@ import org.json.JSONObject
  */
 class RegistrationFragment : Fragment() {
 
-    @SuppressLint("SetTextI18n")
+    /**
+     * Lazily initialize our [OverviewViewModel].
+     */
+    private val registrationViewModel: RegistrationViewModel by lazy {
+        val application = requireNotNull(this.activity).application
+        val dataSource = UserDatabase.getInstance(application).userDatabaseDao
+        ViewModelProvider(this, RegistrationViewModelFactory(dataSource, application)).get(RegistrationViewModel::class.java)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentRegistrationBinding>(inflater,
-            R.layout.fragment_registration,container,false)
+
+        val binding = FragmentRegistrationBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.registrationViewModel = registrationViewModel
+
+//        val database by lazy { UserDatabase.getInstance(application, applicationScope) }
+//        val repository by lazy { UserRepository(UserDatabase) }
+
+        // Get a reference to the ViewModel associated with this fragment.
+//        val registrationViewModel =
+//            ViewModelProvider(this, viewModelFactory).get(RegistrationViewModel::class.java)
+
+        binding.registrationViewModel = registrationViewModel
 
         val animDrawable = binding.registrationLayout.background as AnimationDrawable
         animDrawable.setEnterFadeDuration(10)
@@ -44,10 +69,22 @@ class RegistrationFragment : Fragment() {
         animDrawable.start()
 
         // Set the onClickListener for the submitButton
-
         binding.toLoginButton.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
+
+//        registrationViewModel.getRegisterUser().observe(this, Observer {
+//            showToas("Registracia uspesna")
+//        })
+//        registrationViewModel.navigateToProfile.observe(this, Observer { user ->
+//            user?.let {
+////                this.findNavController().navigate(
+////                    SleepTrackerFragmentDirections
+////                        .actionSleepTrackerFragmentToSleepQualityFragment(user.id))
+//
+//                registrationViewModel.doneNavigating()
+//            }
+//        })
 
         binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
@@ -56,11 +93,6 @@ class RegistrationFragment : Fragment() {
             val password = binding.passwordInput.text;
             val passwordCheck = binding.passwordCheckInput.text;
             val birth = binding.ageInput.text;
-            Log.i("INFO", name.toString())
-            Log.i("INFO", password.toString())
-            Log.i("INFO", passwordCheck.toString())
-            Log.i("INFO", birth.toString())
-
 
             if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
                 binding.messageRegister.visibility = View.VISIBLE;
@@ -83,7 +115,7 @@ class RegistrationFragment : Fragment() {
                 binding.messageRegister.text = "";
             }
 
-// Instantiate the RequestQueue.
+            // Instantiate the RequestQueue.
             val queue = Volley.newRequestQueue(view.context)
             val url = "http://api.mcomputing.eu/mobv/service.php"
             val jsonBody = JSONObject()
@@ -96,10 +128,7 @@ class RegistrationFragment : Fragment() {
             jsonBody.put("username", name.toString())
             jsonBody.put("password", password.toString())
 
-
-
-
-// Request a string response from the provided URL.
+            // Request a string response from the provided URL.
             val jsonObjectRequest = JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 Response.Listener { response ->
                     Log.i("INFO", response.toString());
@@ -109,7 +138,7 @@ class RegistrationFragment : Fragment() {
                 }
             )
 
-// Add the request to the RequestQueue.
+            // Add the request to the RequestQueue.
             queue.add(jsonObjectRequest)
 
         }
