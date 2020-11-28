@@ -1,6 +1,7 @@
 package com.example.tuktuk.registration
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
@@ -24,8 +25,8 @@ import com.example.tuktuk.database.UserDatabase
 import com.example.tuktuk.database.UserRepository
 
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import com.example.tuktuk.util.Injection
+import kotlinx.coroutines.*
 import org.json.JSONObject
 
 
@@ -36,61 +37,46 @@ import org.json.JSONObject
  */
 class RegistrationFragment : Fragment() {
 
+    private lateinit var registrationViewModel: RegistrationViewModel
+    private lateinit var binding: FragmentRegistrationBinding
 
-    /**
-     * Lazily initialize our [OverviewViewModel].
-     */
-    private val registrationViewModel: RegistrationViewModel by lazy {
-        val application = requireNotNull(this.activity).application
-        val dataSource = AppDatabase.getInstance(application).appDatabaseDao
-        ViewModelProvider(this, RegistrationViewModelFactory(dataSource, application)).get(RegistrationViewModel::class.java)
+    //helper global variable
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var registerContext: Context
     }
 
-  @SuppressLint("SetTextI18n")
+  @SuppressLint("SetTextI18n", "UseRequireInsteadOfGet")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
+      binding = DataBindingUtil.inflate(
+          inflater, R.layout.fragment_registration, container, false
+      )
+      binding.lifecycleOwner = this
+      registrationViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+          .get(RegistrationViewModel::class.java)
 
-        val binding = FragmentRegistrationBinding.inflate(inflater)
-        binding.lifecycleOwner = this
-        binding.registrationViewModel = registrationViewModel
+      val animDrawable = binding.registrationLayout.background as AnimationDrawable
+      animDrawable.setEnterFadeDuration(10)
+      animDrawable.setExitFadeDuration(5000)
+      animDrawable.start()
 
-//        val database by lazy { UserDatabase.getInstance(application, applicationScope) }
-//        val repository by lazy { UserRepository(UserDatabase) }
+      // Set the onClickListener for the submitButton
+      binding.toLoginButton.setOnClickListener { view : View ->
+          view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+      }
 
-        // Get a reference to the ViewModel associated with this fragment.
-//        val registrationViewModel =
-//            ViewModelProvider(this, viewModelFactory).get(RegistrationViewModel::class.java)
+//      binding.registrationViewModel = registrationViewModel
+      return binding.root
+  }
 
-        binding.registrationViewModel = registrationViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-
-        val animDrawable = binding.registrationLayout.background as AnimationDrawable
-        animDrawable.setEnterFadeDuration(10)
-        animDrawable.setExitFadeDuration(5000)
-        animDrawable.start()
-
-        // Set the onClickListener for the submitButton
-        binding.toLoginButton.setOnClickListener { view : View ->
-            view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
-        }
-
-
-
-//        registrationViewModel.getRegisterUser().observe(this, Observer {
-//            showToas("Registracia uspesna")
-//        })
-//        registrationViewModel.navigateToProfile.observe(this, Observer { user ->
-//            user?.let {
-////                this.findNavController().navigate(
-////                    SleepTrackerFragmentDirections
-////                        .actionSleepTrackerFragmentToSleepQualityFragment(user.id))
-//
-//                registrationViewModel.doneNavigating()
-//            }
-//        })
+//        registrationContext = view.context
 
         binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
@@ -104,12 +90,9 @@ class RegistrationFragment : Fragment() {
             if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
                 binding.messageRegister.visibility = View.VISIBLE
                 binding.messageRegister.text = "Musíte vyplniť všetky polia."
-
-
             }
 
             else if (password.toString() != passwordCheck.toString()) {
-
                 binding.messageRegister.visibility = View.VISIBLE
                 binding.messageRegister.text = "Heslá sa nezhodujú."
             }
@@ -124,64 +107,28 @@ class RegistrationFragment : Fragment() {
                 binding.messageRegister.text = ""
             }
 
-
-// Instantiate the RequestQueue.
-//            val queue = Volley.newRequestQueue(view.context)
-//            val url = "http://api.mcomputing.eu/mobv/service.php"
-//
-//            val jsonBodyExists = JSONObject()
-//            jsonBodyExists.put("action", "exists")
-//            jsonBodyExists.put("Content-Type", "application/json")
-//            jsonBodyExists.put("Cache-Control", "no-cache")
-//            jsonBodyExists.put("Accept", "application/json")
-//            jsonBodyExists.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
-//            jsonBodyExists.put("username", name.toString())
-//
-//            // Request a string response from the provided URL.
-//            val jsonObjectRequestExists = JsonObjectRequest(Request.Method.POST, url, jsonBodyExists,
-//                { response ->
-//                    Log.i("INFO", response.toString())
-//                    Log.i("INFO", "Meno je k dispozicii")
-//                },
-//                { error ->
-//                    Log.i("ERROR", error.toString())
-//                    Log.i("ERROR", "Uzivatel s danym menom uz existuje")
-//                }
-//            )
-//
-//// Add the request to the RequestQueue.
-//            queue.add(jsonObjectRequestExists)
-//
-//            val jsonBodyRegister = JSONObject()
-//            jsonBodyRegister.put("action", "register")
-//            jsonBodyRegister.put("Content-Type", "application/json")
-//            jsonBodyRegister.put("Cache-Control", "no-cache")
-//            jsonBodyRegister.put("Accept", "application/json")
-//            jsonBodyRegister.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
-//            jsonBodyRegister.put("email", email.toString())
-//            jsonBodyRegister.put("username", name.toString())
-//            jsonBodyRegister.put("password", password.toString())
-//
-//
-//
-//
-//// Request a string response from the provided URL.
-//            val jsonObjectRequestRegister = JsonObjectRequest(Request.Method.POST, url, jsonBodyRegister,
-//                { response ->
-//                    Log.i("INFO", response.toString())
-//                },
-//                { error ->
-//                    Log.i("ERROR", error.toString())
-//                }
-//            )
-//
-//// Add the request to the RequestQueue.
-//            queue.add(jsonObjectRequestRegister)
-
-
+            register(name.toString(), email.toString(), password.toString())
         }
-        return binding.root
     }
+
+    private fun register(name: String, email: String, password: String){
+        GlobalScope.launch {
+            val response: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
+            val code = response.await()
+            if (code == 200) {
+                Log.i("INFO", "code 200 register")
+//                activity?.runOnUiThread {
+//                    playSuccessAnimation(startNewFragment)
+//                }
+            } else {
+                Log.i("INFO", "code err register")
+//                activity?.runOnUiThread {
+//                    playErrorAnimation(code)
+//                }
+            }
+        }
+    }
+
 
     fun isEmailValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

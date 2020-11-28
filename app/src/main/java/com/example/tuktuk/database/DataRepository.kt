@@ -3,61 +3,50 @@ package com.example.tuktuk.database
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
-import com.example.tuktuk.network.MarsUser
-import com.example.tuktuk.network.responses.UserResponse
-//import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 import java.net.ConnectException
 
-class UserRepository(
+class DataRepository(
     private val cache: LocalCache,
     private val api: Api
-    ) {
+) {
 
     lateinit var uid: String
 
     companion object {
         const val TAG = "DataRepository"
         @Volatile
-        private var INSTANCE: UserRepository ?= null
+        private var INSTANCE: DataRepository ?= null
 
-        fun getInstance(cache: LocalCache, api: Api): UserRepository =
+        fun getInstance(cache: LocalCache, api: Api): DataRepository =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: UserRepository(cache, api).also { INSTANCE = it }
+                INSTANCE ?: DataRepository(cache, api).also { INSTANCE = it }
             }
     }
-
-//    val gson = Gson()
 
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun userRegister(
         action: String,
-        apikey: String,
         email: String,
         username: String,
-        password: String) {
+        password: String): Int {
+        val responseCode = 500
+        Api.setAuthentication(false)
         try {
-            val response = api.userRegister(action, apikey, username, email, password)
+            val response = api.userRegister(action, Api.api_key, username, email, password)
             if (response.isSuccessful) {
-                response.body()?.let {
+//                response.body()?.let {
 //                    return cache.insertUser(gson.fromJson(response.toString()))
-                }
+//                }
                 Log.i("INFO", response.toString())
+                return response.code()
             }
 
         } catch (ex: ConnectException){
             Log.i("ERROR", "Problem s pripojenim k internetu.")
-            return
+            ex.printStackTrace()
         }
-
+        return responseCode
     }
-
-//    @Suppress("RedundantSuspendModifier")
-//    @WorkerThread
-//    suspend fun insert(user: User) {
-//        appDatabaseDao.insertUser(user)
-//    }
 }

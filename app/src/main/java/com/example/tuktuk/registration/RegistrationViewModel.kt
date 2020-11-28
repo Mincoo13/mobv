@@ -1,20 +1,15 @@
 package com.example.tuktuk.registration
 
-import android.app.Application
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
-import com.example.tuktuk.database.AppDatabaseDao
-import com.example.tuktuk.database.User
-import com.example.tuktuk.database.UserDatabase
-import com.example.tuktuk.database.UserDatabaseDao
+import com.example.tuktuk.database.*
 import com.example.tuktuk.network.MarsUser
 import kotlinx.coroutines.launch
 
 
 class RegistrationViewModel(
-    val database: AppDatabaseDao,
-    application: Application) : AndroidViewModel(application) {
+    val repository: DataRepository
+) : ViewModel() {
 
     val name = ObservableField<String>("")
     val email = ObservableField<String>("")
@@ -36,11 +31,14 @@ class RegistrationViewModel(
     }
 
     private suspend fun insert(user: User) {
-        database.insertUser(user)
+//        database.insertUser(user)
     }
 
-    fun registerUser(
-
-    )
+//    fun registerUser(
+//
+//    )
+    suspend fun api(action: String, name: String, email: String, password: String): Int{
+        return repository.userRegister(action, name, email, password)
+    }
 
 }

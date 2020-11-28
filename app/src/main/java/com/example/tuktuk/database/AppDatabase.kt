@@ -20,67 +20,19 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: UserDatabase? = null
+        private var INSTANCE: AppDatabase? = null
 
-        fun getInstance(context: Context): UserDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        UserDatabase::class.java,
-                        "tuk-tuk-database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
+        fun getInstance(context: Context): AppDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE
+                    ?: buildDatabase(context).also { INSTANCE = it }
             }
-        }
 
-        fun getDatabase(context: Context, scope: CoroutineScope): UserDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        UserDatabase::class.java,
-                        "tuk-tuk-database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .addCallback(WordDatabaseCallback(scope))
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
-
-        private class WordDatabaseCallback(
-            private val scope: CoroutineScope
-        ) : RoomDatabase.Callback() {
-            /**
-             * Override the onCreate method to populate the database.
-             */
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                INSTANCE?.let { database ->
-                    scope.launch(Dispatchers.IO) {
-                        populateDatabase(database.appDatabaseDao)
-                    }
-                }
-            }
-        }
-
-        /**
-         * Populate the database in a new coroutine.
-         * If you want to start with more words, just add them.
-         */
-        suspend fun populateDatabase(appDatabaseDao: AppDatabaseDao) {
-            // Start the app with a clean database every time.
-            // Not needed if you only populate on creation.
-            appDatabaseDao.clear()
-        }
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java, "tuk-tuk-database.db" // Name of database is here
+            ).fallbackToDestructiveMigration()
+                .build()
     }
 }
