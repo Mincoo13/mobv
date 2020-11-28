@@ -3,6 +3,7 @@ package com.example.tuktuk.database
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
+import com.example.tuktuk.network.request.UserRequest
 import java.net.ConnectException
 
 class DataRepository(
@@ -13,7 +14,6 @@ class DataRepository(
     lateinit var uid: String
 
     companion object {
-        const val TAG = "DataRepository"
         @Volatile
         private var INSTANCE: DataRepository ?= null
 
@@ -35,6 +35,7 @@ class DataRepository(
         Api.setAuthentication(false)
         try {
             val response = api.userRegister(action, Api.api_key, username, email, password)
+            Log.i("INFO", response.toString())
             if (response.isSuccessful) {
 //                response.body()?.let {
 //                    return cache.insertUser(gson.fromJson(response.toString()))

@@ -13,7 +13,7 @@ class AuthInterceptor : Interceptor {
 
         val request = chain.request()
             .newBuilder()
-            .addHeader("User-Agent","Zadanie-Android/1.0.0")
+            .addHeader("Cache-Control","no-cache")
             .addHeader("Accept","application/json")
             .addHeader("Content-Type","application/json")
 

@@ -1,8 +1,8 @@
 package com.example.tuktuk.network.responses
 
 data class UserResponse(
-    val id: Long,
-    val name: String,
+    val id: String,
+    val username: String,
     val email: String,
     val token: String,
     val refresh: String,
