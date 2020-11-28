@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
+import com.example.tuktuk.database.AppDatabaseDao
 import com.example.tuktuk.database.User
 import com.example.tuktuk.database.UserDatabase
 import com.example.tuktuk.database.UserDatabaseDao
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 
 
 class RegistrationViewModel(
-    val database: UserDatabaseDao,
+    val database: AppDatabaseDao,
     application: Application) : AndroidViewModel(application) {
 
     val name = ObservableField<String>("")
@@ -35,7 +36,11 @@ class RegistrationViewModel(
     }
 
     private suspend fun insert(user: User) {
-        database.insert(user)
+        database.insertUser(user)
     }
+
+    fun registerUser(
+
+    )
 
 }

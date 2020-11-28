@@ -18,6 +18,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.tuktuk.R
+import com.example.tuktuk.database.AppDatabase
 
 import com.example.tuktuk.database.UserDatabase
 import com.example.tuktuk.database.UserRepository
@@ -41,7 +42,7 @@ class RegistrationFragment : Fragment() {
      */
     private val registrationViewModel: RegistrationViewModel by lazy {
         val application = requireNotNull(this.activity).application
-        val dataSource = UserDatabase.getInstance(application).userDatabaseDao
+        val dataSource = AppDatabase.getInstance(application).appDatabaseDao
         ViewModelProvider(this, RegistrationViewModelFactory(dataSource, application)).get(RegistrationViewModel::class.java)
     }
 
@@ -94,14 +95,15 @@ class RegistrationFragment : Fragment() {
         binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
 
-            val name = binding.nameInput.text;
-            val password = binding.passwordInput.text;
-            val passwordCheck = binding.passwordCheckInput.text;
-            val birth = binding.ageInput.text;
+            val name = binding.nameInput.text
+            val email = binding.emailInput.text
+            val password = binding.passwordInput.text
+            val passwordCheck = binding.passwordCheckInput.text
+            val birth = binding.ageInput.text
 
             if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
-                binding.messageRegister.visibility = View.VISIBLE;
-                binding.messageRegister.text = "Musíte vyplniť všetky polia.";
+                binding.messageRegister.visibility = View.VISIBLE
+                binding.messageRegister.text = "Musíte vyplniť všetky polia."
 
 
             }
@@ -124,57 +126,57 @@ class RegistrationFragment : Fragment() {
 
 
 // Instantiate the RequestQueue.
-            val queue = Volley.newRequestQueue(view.context)
-            val url = "http://api.mcomputing.eu/mobv/service.php"
-
-            val jsonBodyExists = JSONObject()
-            jsonBodyExists.put("action", "exists")
-            jsonBodyExists.put("Content-Type", "application/json")
-            jsonBodyExists.put("Cache-Control", "no-cache")
-            jsonBodyExists.put("Accept", "application/json")
-            jsonBodyExists.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
-            jsonBodyExists.put("username", name.toString())
-
-            // Request a string response from the provided URL.
-            val jsonObjectRequestExists = JsonObjectRequest(Request.Method.POST, url, jsonBodyExists,
-                { response ->
-                    Log.i("INFO", response.toString())
-                    Log.i("INFO", "Meno je k dispozicii")
-                },
-                { error ->
-                    Log.i("ERROR", error.toString())
-                    Log.i("ERROR", "Uzivatel s danym menom uz existuje")
-                }
-            )
-
-// Add the request to the RequestQueue.
-            queue.add(jsonObjectRequestExists)
-
-            val jsonBodyRegister = JSONObject()
-            jsonBodyRegister.put("action", "register")
-            jsonBodyRegister.put("Content-Type", "application/json")
-            jsonBodyRegister.put("Cache-Control", "no-cache")
-            jsonBodyRegister.put("Accept", "application/json")
-            jsonBodyRegister.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
-            jsonBodyRegister.put("email", email.toString())
-            jsonBodyRegister.put("username", name.toString())
-            jsonBodyRegister.put("password", password.toString())
-
-
-
-
-// Request a string response from the provided URL.
-            val jsonObjectRequestRegister = JsonObjectRequest(Request.Method.POST, url, jsonBodyRegister,
-                { response ->
-                    Log.i("INFO", response.toString())
-                },
-                { error ->
-                    Log.i("ERROR", error.toString())
-                }
-            )
-
-// Add the request to the RequestQueue.
-            queue.add(jsonObjectRequestRegister)
+//            val queue = Volley.newRequestQueue(view.context)
+//            val url = "http://api.mcomputing.eu/mobv/service.php"
+//
+//            val jsonBodyExists = JSONObject()
+//            jsonBodyExists.put("action", "exists")
+//            jsonBodyExists.put("Content-Type", "application/json")
+//            jsonBodyExists.put("Cache-Control", "no-cache")
+//            jsonBodyExists.put("Accept", "application/json")
+//            jsonBodyExists.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
+//            jsonBodyExists.put("username", name.toString())
+//
+//            // Request a string response from the provided URL.
+//            val jsonObjectRequestExists = JsonObjectRequest(Request.Method.POST, url, jsonBodyExists,
+//                { response ->
+//                    Log.i("INFO", response.toString())
+//                    Log.i("INFO", "Meno je k dispozicii")
+//                },
+//                { error ->
+//                    Log.i("ERROR", error.toString())
+//                    Log.i("ERROR", "Uzivatel s danym menom uz existuje")
+//                }
+//            )
+//
+//// Add the request to the RequestQueue.
+//            queue.add(jsonObjectRequestExists)
+//
+//            val jsonBodyRegister = JSONObject()
+//            jsonBodyRegister.put("action", "register")
+//            jsonBodyRegister.put("Content-Type", "application/json")
+//            jsonBodyRegister.put("Cache-Control", "no-cache")
+//            jsonBodyRegister.put("Accept", "application/json")
+//            jsonBodyRegister.put("apikey", "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5")
+//            jsonBodyRegister.put("email", email.toString())
+//            jsonBodyRegister.put("username", name.toString())
+//            jsonBodyRegister.put("password", password.toString())
+//
+//
+//
+//
+//// Request a string response from the provided URL.
+//            val jsonObjectRequestRegister = JsonObjectRequest(Request.Method.POST, url, jsonBodyRegister,
+//                { response ->
+//                    Log.i("INFO", response.toString())
+//                },
+//                { error ->
+//                    Log.i("ERROR", error.toString())
+//                }
+//            )
+//
+//// Add the request to the RequestQueue.
+//            queue.add(jsonObjectRequestRegister)
 
 
         }

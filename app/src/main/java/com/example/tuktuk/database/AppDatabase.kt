@@ -13,9 +13,10 @@ import kotlinx.coroutines.launch
     entities = [User::class],
     version = 1,
     exportSchema = false)
-abstract class UserDatabase : RoomDatabase() {
 
-    abstract val appDatabaseDao: AppDatabaseDao
+abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun appDatabaseDao(): AppDatabaseDao
 
     companion object {
         @Volatile
