@@ -15,7 +15,6 @@ android {
     }
 
     defaultConfig {
-        multiDexEnabled true
         applicationId "com.example.tuktuk"
         minSdkVersion 23
         targetSdkVersion 30
@@ -62,18 +61,6 @@ dependencies {
     //circle profile Image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-
-    // Retrofit for networking
-    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
-    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
-    //gson
-    implementation "com.squareup.retrofit2:converter-gson:2.7.2"
-
-    // Moshi for parsing the JSON format
-    implementation "com.squareup.moshi:moshi:$version_moshi"
-    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
-
     // Room database
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
@@ -84,15 +71,33 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7"
 
-    implementation 'com.android.support:multidex:1.0.1'
+//    implementation 'com.android.support:multidex:1.0.1'
 
-    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    implementation 'com.squareup.okhttp:okhttp:2.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+//    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
     
     // JSON library primarily for TypeConverters ......
-    implementation 'com.google.code.gson:gson:2.8.5'
+//    implementation 'com.google.code.gson:gson:2.8.5'
 
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    implementation ("com.squareup.retrofit2:retrofit:$version_retrofit"){
+        exclude module: 'okhttp'
+    }
+    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit"
+
+
+    // Retrofit for networking
+//    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+    //gson
+//    implementation "com.squareup.retrofit2:converter-gson:2.7.2"
+
+    // Moshi for parsing the JSON format
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 
 }
