@@ -4,6 +4,10 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.UserRequest
+import com.example.tuktuk.network.responses.UserResponse
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import java.net.ConnectException
 
 class DataRepository(
@@ -14,6 +18,7 @@ class DataRepository(
     lateinit var uid: String
 
     companion object {
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").setLenient().create()
         @Volatile
         private var INSTANCE: DataRepository ?= null
 
@@ -34,13 +39,18 @@ class DataRepository(
         val responseCode = 500
         Api.setAuthentication(false)
         try {
-            val response = api.userRegister(action, Api.api_key, username, email, password)
+            val response = api.userRegister(UserRequest(action, Api.api_key, username, email, password))
             Log.i("INFO", response.toString())
+            Log.i("INFO", response.body()!!.toString())
+            Log.i("INFO", response.body()!!.email)
             if (response.isSuccessful) {
-//                response.body()?.let {
-//                    return cache.insertUser(gson.fromJson(response.toString()))
-//                }
-                Log.i("INFO", response.toString())
+                response.body()?.let {
+                    Log.i("INFO", "INSERT TO DATABASE")
+                    cache.insertUser(gson.fromJson(response.body()!!))
+                    Log.i("INFO", "# USER")
+                    cache.getUser(response.body()!!.id)
+                    Log.i("INFO", "---")
+                }
                 return response.code()
             }
 
@@ -51,3 +61,8 @@ class DataRepository(
         return responseCode
     }
 }
+
+private fun Gson.fromJson(body: UserResponse): User {
+    return User(body.id, body.username, body.email, body.token, body.refresh, body.profile)
+}
+

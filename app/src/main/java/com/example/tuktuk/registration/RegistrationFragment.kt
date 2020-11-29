@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.tuktuk.R
+import com.example.tuktuk.database.AppDatabaseDao
+import com.example.tuktuk.database.LocalCache
 
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
 import com.example.tuktuk.util.Injection
@@ -28,6 +30,7 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var registrationViewModel: RegistrationViewModel
     private lateinit var binding: FragmentRegistrationBinding
+    private lateinit var cache: LocalCache
 
     //helper global variable
     companion object {
@@ -48,6 +51,7 @@ class RegistrationFragment : Fragment() {
       registrationViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
           .get(RegistrationViewModel::class.java)
 
+      cache = Injection.provideCache(context!!)
       val animDrawable = binding.registrationLayout.background as AnimationDrawable
       animDrawable.setEnterFadeDuration(10)
       animDrawable.setExitFadeDuration(5000)
@@ -105,7 +109,7 @@ class RegistrationFragment : Fragment() {
             val response: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
             val code = response.await()
             if (code == 200) {
-                Log.i("INFO", "code 200 register")
+                Log.i("INFO", "######")
 //                activity?.runOnUiThread {
 //                    playSuccessAnimation(startNewFragment)
 //                }

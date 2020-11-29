@@ -9,7 +9,7 @@ import com.example.tuktuk.network.Api
 import com.example.tuktuk.registration.RegistrationViewModelFactory
 
 object Injection {
-    private fun provideCache(context: Context): LocalCache {
+    fun provideCache(context: Context): LocalCache {
         val database = AppDatabase.getInstance(context) // get instance of database. It is created if null
         return LocalCache(database.appDatabaseDao()) // use database to create LocalCache
     }

@@ -4,6 +4,7 @@ import com.example.tuktuk.network.request.UserRequest
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.AuthInterceptor
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -43,18 +44,9 @@ interface Api {
             return retrofit.create(Api::class.java)
         }
     }
-
     @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
-    @FormUrlEncoded
     @POST("service.php")
-    suspend fun userRegister(
-        @Field("action") action: String,
-        @Field("apikey") apikey: String,
-        @Field("email") email: String,
-        @Field("username") username: String,
-        @Field("password") password: String
-    ) : Response<UserResponse>
-
+    suspend fun userRegister(@Body body: UserRequest) : Response<UserResponse>
 
 //    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
 //    @FormUrlEncoded

@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
     entities = [User::class],
     version = 1,
     exportSchema = false)
-
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun appDatabaseDao(): AppDatabaseDao

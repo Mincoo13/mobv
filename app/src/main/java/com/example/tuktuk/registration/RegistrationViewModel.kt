@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 
 
 class RegistrationViewModel(
-    val repository: DataRepository
+    private val repository: DataRepository
 ) : ViewModel() {
 
     val name = ObservableField<String>("")
@@ -30,13 +30,6 @@ class RegistrationViewModel(
         _navigateToProfile.value = null
     }
 
-    private suspend fun insert(user: User) {
-//        database.insertUser(user)
-    }
-
-//    fun registerUser(
-//
-//    )
     suspend fun api(action: String, name: String, email: String, password: String): Int{
         return repository.userRegister(action, name, email, password)
     }
