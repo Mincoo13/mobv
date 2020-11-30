@@ -22,4 +22,8 @@ class LoginViewModel(
         return repository.userLogin(action, name, password)
     }
 
+    suspend fun userExists(action: String, name: String): Int {
+        return repository.userExists(action, name)
+    }
+
 }

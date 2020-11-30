@@ -72,14 +72,28 @@ class LoginFragment : Fragment() {
 
     private fun login(name: String, password: String){
         GlobalScope.launch {
-            val response: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userLogin("login", name, password)}
-            when (response.await()) {
-                200 -> {
-                    Log.i("INFO", "Pouzivatel prihlaseny.")
-                    view?.findNavController()?.navigate(R.id.action_loginFragment_to_homeFragment)
-                }
+            val responseExists: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userExists("exists", name)}
+            when (responseExists.await()) {
                 409 -> {
-                    Log.i("INFO", "Pouzivatel existuje.")
+                    val response: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userLogin("login", name, password)}
+                    when (response.await()) {
+                        200 -> {
+                            Log.i("INFO", "Pouzivatel prihlaseny.")
+                            view?.findNavController()?.navigate(R.id.action_loginFragment_to_homeFragment)
+                        }
+                        401 -> {
+                            Log.i("INFO", "Nespravne zadane udaje.")
+                        }
+                        500 -> {
+                            Log.i("INFO", "Nastala neocakavana chyba.")
+                        }
+                        else -> {
+                            Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                        }
+                    }
+                }
+                200 -> {
+                    Log.i("INFO", "Pouzivatel neexistuje.")
                 }
                 500 -> {
                     Log.i("INFO", "Nastala neocakavana chyba.")
@@ -90,5 +104,4 @@ class LoginFragment : Fragment() {
             }
         }
     }
-
 }

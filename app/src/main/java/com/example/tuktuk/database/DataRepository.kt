@@ -71,8 +71,9 @@ class DataRepository(
         try {
             val response = api.userExists(UserExistsRequest(action, Api.api_key, username))
 
-            Log.i("INFO", response.body()!!.exists.toString())
+
             if (response.isSuccessful) {
+                Log.i("INFO", response.body()!!.exists.toString())
                 if (response.body()!!.exists) {
                     Log.i("INFO", "Pouzivatel existuje")
                     return 409
@@ -87,7 +88,7 @@ class DataRepository(
 //
 //            }
         } catch (ex:  ConnectException){
-            Log.i("ERROR", "Problem s pripojenim k internetu.")
+            Log.i("ERROR", "Problem.")
             ex.printStackTrace()
         }
         return responseCode
@@ -97,12 +98,25 @@ class DataRepository(
         action: String,
         username: String,
         password: String): Int {
-        val response = api.userLogin(LoginRequest(action, Api.api_key, username, password))
-        if(response.isSuccessful) {
-            Log.i("INFO", response.body().toString())
-            return response.code()
+        try {
+            val response = api.userLogin(LoginRequest(action, Api.api_key, username, password))
+            Log.i("INFO", "LOGIN")
+            Log.i("INFO", response.toString())
+            if(response.isSuccessful) {
+                return if(response.body() == null) {
+                    Log.i("INFO", "BAD CREDENTIALS")
+                    401
+                } else{
+                    Log.i("INFO", response.body().toString())
+                    response.code()
+                }
+            }
+            Log.i("INFO", "Stala sa velmi skareda vec")
+            return responseCode
+        } catch (ex: Exception){
+            return 401
         }
-        return responseCode
+
     }
 }
 
