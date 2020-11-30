@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.UserExistsRequest
+import com.example.tuktuk.network.request.LoginRequest
 import com.example.tuktuk.network.request.UserRequest
 import com.example.tuktuk.network.responses.UserResponse
 import com.google.gson.Gson
@@ -88,6 +89,18 @@ class DataRepository(
         } catch (ex:  ConnectException){
             Log.i("ERROR", "Problem s pripojenim k internetu.")
             ex.printStackTrace()
+        }
+        return responseCode
+    }
+
+    suspend fun userLogin(
+        action: String,
+        username: String,
+        password: String): Int {
+        val response = api.userLogin(LoginRequest(action, Api.api_key, username, password))
+        if(response.isSuccessful) {
+            Log.i("INFO", response.body().toString())
+            return response.code()
         }
         return responseCode
     }

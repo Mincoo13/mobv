@@ -6,6 +6,7 @@ import com.example.tuktuk.database.AppDatabase
 import com.example.tuktuk.database.DataRepository
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.network.Api
+import com.example.tuktuk.LoginViewModelFactory
 import com.example.tuktuk.registration.RegistrationViewModelFactory
 
 object Injection {
@@ -19,8 +20,14 @@ object Injection {
         return DataRepository.getInstance(provideCache(context), Api.create())
     }
 
-    fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
+    fun provideRegistrationViewModelFactory(context: Context): ViewModelProvider.Factory {
         return RegistrationViewModelFactory(
+            provideDataRepository(context)
+        )
+    }
+
+    fun provideLoginViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return LoginViewModelFactory(
             provideDataRepository(context)
         )
     }

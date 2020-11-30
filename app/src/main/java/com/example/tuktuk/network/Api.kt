@@ -1,5 +1,7 @@
 package com.example.tuktuk.network
 
+import com.example.tuktuk.network.request.InfoRequest
+import com.example.tuktuk.network.request.LoginRequest
 import com.example.tuktuk.network.request.UserExistsRequest
 import com.example.tuktuk.network.request.UserRequest
 import com.example.tuktuk.network.responses.ExistsResponse
@@ -53,4 +55,12 @@ interface Api {
     @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
     @POST("service.php")
     suspend fun userExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userLogin(@Body body: LoginRequest) : Response<UserResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userInfo(@Body body: InfoRequest) : Response<UserResponse>
 }
