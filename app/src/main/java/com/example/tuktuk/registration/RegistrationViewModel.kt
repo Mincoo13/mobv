@@ -34,4 +34,8 @@ class RegistrationViewModel(
         return repository.userRegister(action, name, email, password)
     }
 
+    suspend fun userExists(action: String, name: String): Int {
+        return repository.userExists(action, name)
+    }
+
 }

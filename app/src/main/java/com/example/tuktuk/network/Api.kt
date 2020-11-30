@@ -1,6 +1,8 @@
 package com.example.tuktuk.network
 
+import com.example.tuktuk.network.request.UserExistsRequest
 import com.example.tuktuk.network.request.UserRequest
+import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.AuthInterceptor
 import com.google.gson.GsonBuilder
@@ -48,12 +50,7 @@ interface Api {
     @POST("service.php")
     suspend fun userRegister(@Body body: UserRequest) : Response<UserResponse>
 
-//    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
-//    @FormUrlEncoded
-//    @POST("service.php")
-//    suspend fun userExists(
-//        @Field("action") action: String,
-//        @Field("apikey") apikey: String,
-//        @Field("username") username: String
-//    ) : Response<UserResponse>
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
 }

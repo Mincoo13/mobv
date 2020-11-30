@@ -66,6 +66,7 @@ class RegistrationFragment : Fragment() {
       return binding.root
   }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -89,38 +90,52 @@ class RegistrationFragment : Fragment() {
                 binding.messageRegister.visibility = View.VISIBLE
                 binding.messageRegister.text = "Heslá sa nezhodujú."
             }
-
 //            else if (!isEmailValid(name.toString())) {
 //                binding.messageRegister.visibility = View.VISIBLE
 //                binding.messageRegister.text = "E-mail nie je zadaný v správnom tvare."
 //            }
 
             else {
-                binding.messageRegister.visibility = View.GONE
-                binding.messageRegister.text = ""
+//                if (userExists(name.toString())) {
+//                    binding.messageRegister.visibility = View.VISIBLE
+//                    binding.messageRegister.text = "Pouzivatel s menom ${name.toString()} uz existuje."
+//                }
+//                else {
+//                    binding.messageRegister.visibility = View.GONE
+//                    binding.messageRegister.text = ""
+                   register(name.toString(), email.toString(), password.toString())
             }
-
-            register(name.toString(), email.toString(), password.toString())
         }
     }
 
     private fun register(name: String, email: String, password: String){
         GlobalScope.launch {
-            val response: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
-            val code = response.await()
-            if (code == 200) {
-                Log.i("INFO", "######")
+            val responseExists: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.userExists("exists", name)}
+            val codeExists = responseExists.await()
+            if (codeExists == 200){
+                val responseRegister: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
+                val codeRegister = responseRegister.await()
+                if (codeRegister == 200) {
+                    Log.i("INFO", "######")
 //                activity?.runOnUiThread {
 //                    playSuccessAnimation(startNewFragment)
 //                }
-            } else {
-                Log.i("INFO", "code err register")
+                } else {
+                    Log.i("INFO", "code err register")
 //                activity?.runOnUiThread {
 //                    playErrorAnimation(code)
 //                }
+                }
+            }
+            else if (codeExists == 409) {
+                Log.i("INFO", "Pouzivatel existuje.")
+            }
+            else if (codeExists == 500) {
+                Log.i("INFO", "Nastala neocakavana chyba.")
             }
         }
     }
+
 
 
     fun isEmailValid(email: String): Boolean {
