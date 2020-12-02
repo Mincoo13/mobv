@@ -14,4 +14,8 @@ class LocalCache(private val dao: AppDatabaseDao){
     fun getAllUsers(): LiveData<List<User>> {
         return dao.getAllUsers()
     }
+
+    suspend fun updateUser(user: User) {
+        dao.updateUser(user)
+    }
 }

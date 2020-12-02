@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context="com.example.tuktuk.LoginFragment"
+        tools:context="com.example.tuktuk.login.LoginFragment"
         android:id="@+id/login_layout"
         android:background="@drawable/gradient_animation">
 

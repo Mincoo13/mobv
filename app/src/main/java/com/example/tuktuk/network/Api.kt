@@ -1,9 +1,6 @@
 package com.example.tuktuk.network
 
-import com.example.tuktuk.network.request.InfoRequest
-import com.example.tuktuk.network.request.LoginRequest
-import com.example.tuktuk.network.request.UserExistsRequest
-import com.example.tuktuk.network.request.UserRequest
+import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.AuthInterceptor
@@ -22,11 +19,11 @@ interface Api {
         const val api_key : String = "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5"
         private const val BASE_URL = "http://api.mcomputing.eu/mobv/"
 
-        fun setAuthentication(value: Boolean){
-            Api.useAuthentication = value
-        }
+        var useAuth : Boolean = false
 
-        var useAuthentication : Boolean = false
+        fun setAuth(value: Boolean){
+            useAuth = value
+        }
 
         fun create(): Api {
             val interceptor = HttpLoggingInterceptor()
@@ -63,4 +60,8 @@ interface Api {
     @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
     @POST("service.php")
     suspend fun userInfo(@Body body: InfoRequest) : Response<UserResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun tokenRefresh(@Body body: RefreshRequest) : Response<UserResponse>
 }
