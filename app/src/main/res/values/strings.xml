@@ -14,4 +14,8 @@
     <string name="loginEmail">"Email prihláseného"</string>
     <string name="newPassword">Nové heslo</string>
     <string name="nameLabel">Meno</string>
+    <string name="removePhoto">Odstrániť fotografiu</string>
+    <string name="addPhotoFromGallery">Pridať fotografiu z galérie</string>
+    <string name="getPhoto">Pridať fotografiu pomocou fotoaparáta</string>
+    <string name="close">Zavrieť</string>
 </resources>

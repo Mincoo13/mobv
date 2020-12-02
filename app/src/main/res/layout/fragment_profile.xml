@@ -26,11 +26,9 @@
                 android:id="@+id/imageView3"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/editTextTextEmailAddress"
-                app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
                 app:srcCompat="@drawable/ic_mail" />
 
             <!--            <ImageView
@@ -82,19 +80,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextTextEmailAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:text="@string/loginEmail"
-                app:layout_constraintEnd_toEndOf="@+id/textView2"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -116,6 +101,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/tuktuk_title" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="TextView"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
