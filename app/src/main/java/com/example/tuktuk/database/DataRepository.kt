@@ -30,6 +30,8 @@ class DataRepository(
             }
     }
 
+    fun checkExistUserByUsername(username: String?): Boolean = cache.checkExistUserByUsername(username)
+    fun checkExistUserByEmail(email: String?): Boolean = cache.checkExistUserByEmail(email)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

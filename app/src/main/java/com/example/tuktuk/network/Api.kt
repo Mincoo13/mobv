@@ -1,7 +1,6 @@
 package com.example.tuktuk.network
 
-import com.example.tuktuk.network.request.UserExistsRequest
-import com.example.tuktuk.network.request.UserRequest
+import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.AuthInterceptor
