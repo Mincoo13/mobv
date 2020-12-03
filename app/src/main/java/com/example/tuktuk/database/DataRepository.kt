@@ -2,13 +2,13 @@ package com.example.tuktuk.database
 
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.UserExistsRequest
 import com.example.tuktuk.network.request.UserRequest
 import com.example.tuktuk.network.responses.UserResponse
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import java.net.ConnectException
 
 class DataRepository(
@@ -30,6 +30,8 @@ class DataRepository(
             }
     }
 
+    fun checkExistUserByUsername(username: String?): Boolean = cache.checkExistUserByUsername(username)
+    fun checkExistUserByEmail(email: String?): Boolean = cache.checkExistUserByEmail(email)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -50,7 +52,7 @@ class DataRepository(
                     cache.insertUser(gson.fromJson(response.body()!!))
                     Log.i("INFO", "# USER")
                     cache.getUser(response.body()!!.id)
-                    Log.i("INFO", cache.getUser("41").toString())
+                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                 }
                 return response.code()
             }
@@ -82,11 +84,34 @@ class DataRepository(
                 }
             }
             return responseCode
-//            if (response.isSuccessful) {
-//
-//            }
+
         } catch (ex:  ConnectException){
             Log.i("ERROR", "Problem s pripojenim k internetu.")
+            ex.printStackTrace()
+        }
+        return responseCode
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun userNameExists(
+        action: String,
+        username: String): Int {
+        try {
+            val response = api.userNameExists(UserExistsRequest(action, Api.api_key, username))
+            if (response.isSuccessful) {
+                if (response.body()!!.exists) {
+                    Log.i("INFO", "Pouzivatel existuje")
+                    return 409
+                }
+                else {
+                    Log.i("INFO", "Pouzivatel neexistuje")
+                    return response.code()
+                }
+            }
+            return responseCode
+
+        } catch (ex:  ConnectException){
             ex.printStackTrace()
         }
         return responseCode

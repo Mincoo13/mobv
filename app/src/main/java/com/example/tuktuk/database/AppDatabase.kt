@@ -32,6 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java, "tuk-tuk-database.db" // Name of database is here
             ).fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build()
     }
 }

@@ -1,24 +1,33 @@
 package com.example.tuktuk.registration
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.drawable.AnimationDrawable
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.tuktuk.R
-import com.example.tuktuk.database.AppDatabaseDao
 import com.example.tuktuk.database.LocalCache
 
 import com.example.tuktuk.databinding.FragmentRegistrationBinding
 import com.example.tuktuk.util.Injection
 import kotlinx.coroutines.*
+import java.util.*
 
 
 /**
@@ -31,7 +40,9 @@ class RegistrationFragment : Fragment() {
     private lateinit var registrationViewModel: RegistrationViewModel
     private lateinit var binding: FragmentRegistrationBinding
     private lateinit var cache: LocalCache
-
+    var textview_date: TextView? = null
+    @RequiresApi(Build.VERSION_CODES.N)
+    var cal = Calendar.getInstance()!!
     //helper global variable
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -50,6 +61,7 @@ class RegistrationFragment : Fragment() {
       binding.lifecycleOwner = this
       registrationViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
           .get(RegistrationViewModel::class.java)
+      binding.registrationViewModel = registrationViewModel
 
       cache = Injection.provideCache(context!!)
       val animDrawable = binding.registrationLayout.background as AnimationDrawable
@@ -57,54 +69,58 @@ class RegistrationFragment : Fragment() {
       animDrawable.setExitFadeDuration(5000)
       animDrawable.start()
 
-      // Set the onClickListener for the submitButton
+      textview_date = binding.ageInput
+
+      val dateSetListener = object : DatePickerDialog.OnDateSetListener {
+          @RequiresApi(Build.VERSION_CODES.N)
+          override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
+                                 dayOfMonth: Int) {
+              cal.set(Calendar.YEAR, year)
+              cal.set(Calendar.MONTH, monthOfYear)
+              cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+              updateDateInView()
+          }
+      }
+
+      textview_date!!.setOnClickListener(object : View.OnClickListener {
+          @RequiresApi(Build.VERSION_CODES.N)
+          override fun onClick(view: View) {
+              DatePickerDialog(view.context,
+                  dateSetListener,
+                  cal.get(Calendar.YEAR),
+                  cal.get(Calendar.MONTH),
+                  cal.get(Calendar.DAY_OF_MONTH)).show()
+          }
+
+      })
+
       binding.toLoginButton.setOnClickListener { view : View ->
           view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
       }
 
-//      binding.registrationViewModel = registrationViewModel
+      binding.registerButton.isEnabled = false
       return binding.root
   }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun updateDateInView() {
+        val myFormat = "dd.MM.yyyy" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        textview_date!!.text = sdf.format(cal.getTime())
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        registrationContext = view.context
-
-        binding.registerButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
-        { view: View ->
-
-            val name = binding.nameInput.text
-            val email = binding.emailInput.text
-            val password = binding.passwordInput.text
-            val passwordCheck = binding.passwordCheckInput.text
-            val birth = binding.ageInput.text
-
-            if (name.toString() == "" || password.toString() == "" || passwordCheck.toString() == "" || birth.toString() == "") {
-                binding.messageRegister.visibility = View.VISIBLE
-                binding.messageRegister.text = "Musíte vyplniť všetky polia."
+        registrationViewModel.isValid.observe(viewLifecycleOwner, Observer<Boolean> { isValidated ->
+            if (isValidated) {
+                binding.registerButton.isEnabled = true
             }
+        })
 
-            else if (password.toString() != passwordCheck.toString()) {
-                binding.messageRegister.visibility = View.VISIBLE
-                binding.messageRegister.text = "Heslá sa nezhodujú."
-            }
-//            else if (!isEmailValid(name.toString())) {
-//                binding.messageRegister.visibility = View.VISIBLE
-//                binding.messageRegister.text = "E-mail nie je zadaný v správnom tvare."
-//            }
-
-            else {
-//                if (userExists(name.toString())) {
-//                    binding.messageRegister.visibility = View.VISIBLE
-//                    binding.messageRegister.text = "Pouzivatel s menom ${name.toString()} uz existuje."
-//                }
-//                else {
-//                    binding.messageRegister.visibility = View.GONE
-//                    binding.messageRegister.text = ""
-                   register(name.toString(), email.toString(), password.toString())
-            }
+        binding.registerButton.setOnClickListener {
+            register(registrationViewModel.name.toString(), registrationViewModel.email.toString(), registrationViewModel.password.toString())
         }
     }
 
@@ -116,15 +132,9 @@ class RegistrationFragment : Fragment() {
                 val responseRegister: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
                 val codeRegister = responseRegister.await()
                 if (codeRegister == 200) {
-                    Log.i("INFO", "######")
-//                activity?.runOnUiThread {
-//                    playSuccessAnimation(startNewFragment)
-//                }
+                    findNavController().navigate(R.id.loginFragment)
                 } else {
                     Log.i("INFO", "code err register")
-//                activity?.runOnUiThread {
-//                    playErrorAnimation(code)
-//                }
                 }
             }
             else if (codeExists == 409) {
@@ -134,11 +144,5 @@ class RegistrationFragment : Fragment() {
                 Log.i("INFO", "Nastala neocakavana chyba.")
             }
         }
-    }
-
-
-
-    fun isEmailValid(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }

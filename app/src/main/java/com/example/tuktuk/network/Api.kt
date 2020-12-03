@@ -53,4 +53,8 @@ interface Api {
     @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
     @POST("service.php")
     suspend fun userExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userNameExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
 }

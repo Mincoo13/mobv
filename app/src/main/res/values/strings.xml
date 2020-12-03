@@ -14,4 +14,7 @@
     <string name="loginEmail">"Email prihláseného"</string>
     <string name="newPassword">Nové heslo</string>
     <string name="nameLabel">Meno</string>
+    <string name="emailNotValid">E-mail nema spravny tvar</string>
+    <string name="usernameIsUsed">Používateľské meno je už použité</string>
+    <string name="emptyString"></string>
 </resources>
