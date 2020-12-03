@@ -16,7 +16,7 @@ object SharedPreferences {
     private val PROFILE = Pair("profile", "")
     private val EMAIL = Pair("email", "")
     private val REFRESH = Pair("refresh", "")
-
+    private val IMAGE = Pair("image", "")
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(NAME, MODE)
@@ -70,5 +70,11 @@ object SharedPreferences {
         get() = preferences.getString(REFRESH.first, REFRESH.second) ?: ""
         set(value) = preferences.edit {
             it.putString(REFRESH.first, value)
+        }
+
+    var image: String
+        get() = preferences.getString(IMAGE.first, IMAGE.second) ?: ""
+        set(value) = preferences.edit {
+            it.putString(IMAGE.first, value)
         }
 }

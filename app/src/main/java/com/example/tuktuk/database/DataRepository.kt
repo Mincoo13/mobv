@@ -1,5 +1,9 @@
 package com.example.tuktuk.database
 
+import android.net.Uri
+import android.os.FileUtils
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
@@ -9,7 +13,10 @@ import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import java.io.File
+import java.io.FileInputStream
 import java.net.ConnectException
+
 
 class DataRepository(
     private val cache: LocalCache,
@@ -207,6 +214,43 @@ class DataRepository(
         } catch (ex:  ConnectException){
             ex.printStackTrace()
         }
+        return responseCode
+    }
+
+    suspend fun uploadImage(
+        file: File,
+        token: String): Int {
+
+        val length = file.length()
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        val fileInputStream = FileInputStream(file)
+
+        /*  fileInputStream.use {fileInputStream ->
+             var read: Int
+             val handler = Handler(Looper.getMainLooper())
+
+             while (fileInputStream.read(buffer).also {read = it } != -1)
+         }
+
+
+         Log.i("INFO", "-----")
+
+
+
+        val response = api.uploadImage()
+         if (response.isSuccessful) {
+             Log.i("INFO", "Odhlasenie sa podarilo")
+             SharedPreferences.token = ""
+             SharedPreferences.email = ""
+             SharedPreferences.refresh = ""
+             SharedPreferences.profile = ""
+             SharedPreferences.username = ""
+             SharedPreferences.isLogin = false
+             return response.code()
+         }
+
+         Log.i("INFO", "Odhlasenie sa nepodarilo")
+         Log.i("INFO", response.code().toString())*/
         return responseCode
     }
 }

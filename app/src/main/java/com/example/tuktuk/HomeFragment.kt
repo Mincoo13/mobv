@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tuktuk.Adapter.MediaAdapter
 import com.example.tuktuk.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.fragment_home.*

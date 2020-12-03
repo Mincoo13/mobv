@@ -1,5 +1,6 @@
 package com.example.tuktuk.profile
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
-import com.example.tuktuk.databinding.FragmentLoginBinding
 import com.example.tuktuk.databinding.FragmentProfileBinding
 import com.example.tuktuk.login.LoginViewModel
 import com.example.tuktuk.util.Injection
@@ -37,21 +37,14 @@ class ProfileFragment : Fragment() {
         profileViewModel = ViewModelProvider(this, Injection.provideProfileViewModelFactory(requireContext()))
             .get(ProfileViewModel::class.java)
 
-        val fragmentManager = (activity as FragmentActivity).supportFragmentManager
-
-
         info(SharedPreferences.token)
 
         binding.emailProfile.text = SharedPreferences.email
         binding.usernameProfile.text = SharedPreferences.username
 
-        binding.apply {
-            profileImage.setOnClickListener(View.OnClickListener {
-                ProfileDialogFragment().show(fragmentManager, "ProfileDialogFragment")
-
-            })
-        }
-
+        val uri: Uri = Uri.parse(SharedPreferences.image)
+        Log.v("INFO", SharedPreferences.image)
+        binding.imageView3.setImageURI(uri)
 
         return binding.root
     }
@@ -63,6 +56,14 @@ class ProfileFragment : Fragment() {
         { view: View ->
             Log.i("INFO", SharedPreferences.refresh)
             logout(SharedPreferences.refresh)
+        }
+
+        val fragmentManager = (activity as FragmentActivity).supportFragmentManager
+
+        binding.apply {
+            profileImage.setOnClickListener(View.OnClickListener {
+                ProfileDialogFragment().show(fragmentManager, "ProfileDialogFragment")
+            })
         }
     }
 
