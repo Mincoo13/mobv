@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context="com.example.tuktuk.LoginFragment"
+        tools:context="com.example.tuktuk.login.LoginFragment"
         android:id="@+id/login_layout"
         android:background="@drawable/gradient_animation">
 
@@ -36,7 +36,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/loginButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passwordInput"
+                app:layout_constraintTop_toBottomOf="@+id/passwordLoginInput"
                 tools:visibility="gone" />
 
             <TextView
@@ -49,8 +49,8 @@
                 android:text="@string/password"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/passwordInput"
-                app:layout_constraintEnd_toStartOf="@+id/passwordInput"
+                app:layout_constraintBaseline_toBaselineOf="@+id/passwordLoginInput"
+                app:layout_constraintEnd_toStartOf="@+id/passwordLoginInput"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
@@ -62,8 +62,8 @@
                 android:text="@string/email"
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/emailInput"
-                app:layout_constraintEnd_toStartOf="@+id/emailInput"
+                app:layout_constraintBaseline_toBaselineOf="@+id/nameLoginInput"
+                app:layout_constraintEnd_toStartOf="@+id/nameLoginInput"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
@@ -84,7 +84,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/messageLogin" />
 
             <EditText
-                android:id="@+id/passwordInput"
+                android:id="@+id/passwordLoginInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -92,15 +92,16 @@
                 android:ems="10"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
+                android:text="aaa"
                 android:textColorHighlight="#000000"
                 android:textColorLink="#000000"
                 app:layout_constraintBottom_toTopOf="@+id/messageLogin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/password"
-                app:layout_constraintTop_toBottomOf="@+id/emailInput" />
+                app:layout_constraintTop_toBottomOf="@+id/nameLoginInput" />
 
             <EditText
-                android:id="@+id/emailInput"
+                android:id="@+id/nameLoginInput"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="8dp"
@@ -110,9 +111,10 @@
                 android:ems="10"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
+                android:text="newuser111"
                 android:textColorHighlight="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/passwordInput"
+                app:layout_constraintBottom_toTopOf="@+id/passwordLoginInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/email"
                 app:layout_constraintTop_toTopOf="parent"
@@ -140,7 +142,7 @@
                 android:layout_height="170dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
-                app:layout_constraintBottom_toTopOf="@+id/emailInput"
+                app:layout_constraintBottom_toTopOf="@+id/nameLoginInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

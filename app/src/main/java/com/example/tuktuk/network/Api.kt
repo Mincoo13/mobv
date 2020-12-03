@@ -20,11 +20,11 @@ interface Api {
         const val api_key : String = "uX9yA9jR8hZ6wE0mT5rZ3kA4kA6zC5"
         private const val BASE_URL = "http://api.mcomputing.eu/mobv/"
 
-        fun setAuthentication(value: Boolean){
-            Api.useAuthentication = value
-        }
+        var useAuth : Boolean = false
 
-        var useAuthentication : Boolean = false
+        fun setAuth(value: Boolean){
+            useAuth = value
+        }
 
         fun create(): Api {
             val interceptor = HttpLoggingInterceptor()
@@ -57,4 +57,16 @@ interface Api {
     @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
     @POST("service.php")
     suspend fun userNameExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userLogin(@Body body: LoginRequest) : Response<UserResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun userInfo(@Body body: InfoRequest) : Response<UserResponse>
+
+    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @POST("service.php")
+    suspend fun tokenRefresh(@Body body: RefreshRequest) : Response<UserResponse>
 }

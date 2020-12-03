@@ -19,38 +19,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_wave_4">
+            android:background="@drawable/ic_wave_5">
 
 
-            <Button
-                android:id="@+id/logOutButton"
-                style="@android:style/Widget.Holo.Button.Borderless"
-                android:layout_width="172dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="184dp"
-                android:text="@string/logOut"
-                android:textAlignment="viewStart"
-                android:textColor="#0027FD"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.143"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <Button
-                android:id="@+id/changePswButton"
-                style="@android:style/Widget.Holo.Button.Borderless"
-                android:layout_width="172dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/changePassword"
-                android:textAlignment="viewStart"
-                android:textColor="#0027FF"
-                app:layout_constraintBottom_toTopOf="@+id/logOutButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.143"
-                app:layout_constraintStart_toStartOf="parent" />
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/usernameProfile"
+                app:layout_constraintTop_toBottomOf="@+id/usernameProfile"
+                app:srcCompat="@drawable/ic_mail" />
 
             <!--            <ImageView
                 android:id="@+id/profileImage"
@@ -64,56 +43,84 @@
                 app:layout_constraintVertical_bias="0.539"
                 tools:srcCompat="@drawable/blank_profile_picture_973460_640" />-->
 
+            <Button
+                android:id="@+id/logOutButton"
+                style="@android:style/Widget.Holo.Button.Borderless"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/logOut"
+                android:textAlignment="center"
+                android:textColor="@color/colorGradientCenter"
+                app:layout_constraintBottom_toTopOf="@+id/imageView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changePswButton" />
+
+            <Button
+                android:id="@+id/changePswButton"
+                style="@android:style/Widget.Holo.Button.Borderless"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="250dp"
+                android:text="@string/changePassword"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/logOutButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailProfile" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="149dp"
-                android:layout_height="135dp"
-                android:layout_marginTop="4dp"
+                android:layout_width="177dp"
+                android:layout_height="214dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginBottom="32dp"
                 android:src="@drawable/blank_profile_picture_973460_640"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView2"
+                app:layout_constraintBottom_toTopOf="@+id/usernameProfile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.328" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="62dp"
-                android:layout_height="62dp"
-                app:layout_constraintBottom_toTopOf="@+id/changePswButton"
-                app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:layout_constraintVertical_bias="0.194"
-                app:srcCompat="@android:drawable/sym_action_email" />
-
-            <EditText
-                android:id="@+id/editTextTextEmailAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="52dp"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:text="@string/loginEmail"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="302dp"
-                android:layout_height="61dp"
-                android:layout_marginBottom="24dp"
+                android:id="@+id/usernameProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="@string/userName"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.489"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="105dp"
+                android:layout_height="78dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logOutButton"
+                app:srcCompat="@drawable/tuktuk_title" />
+
+            <TextView
+                android:id="@+id/emailProfile"
+                android:layout_width="0dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="128dp"
+                android:text="TextView"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

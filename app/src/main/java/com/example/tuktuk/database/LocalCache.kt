@@ -31,4 +31,8 @@ class LocalCache(private val dao: AppDatabaseDao){
         return dao.checkExistUserByEmail(email)
     }
 
+
+    suspend fun updateUser(user: User) {
+        dao.updateUser(user)
+    }
 }

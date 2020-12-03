@@ -59,7 +59,7 @@ class RegistrationFragment : Fragment() {
           inflater, R.layout.fragment_registration, container, false
       )
       binding.lifecycleOwner = this
-      registrationViewModel = ViewModelProvider(this, Injection.provideViewModelFactory(context!!))
+      registrationViewModel = ViewModelProvider(this, Injection.provideRegistrationViewModelFactory(context!!))
           .get(RegistrationViewModel::class.java)
       binding.registrationViewModel = registrationViewModel
 
@@ -127,21 +127,38 @@ class RegistrationFragment : Fragment() {
     private fun register(name: String, email: String, password: String){
         GlobalScope.launch {
             val responseExists: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.userExists("exists", name)}
-            val codeExists = responseExists.await()
-            if (codeExists == 200){
-                val responseRegister: Deferred<Int> = async (Dispatchers.IO) {registrationViewModel.api("register", name, email, password)}
-                val codeRegister = responseRegister.await()
-                if (codeRegister == 200) {
-                    findNavController().navigate(R.id.loginFragment)
-                } else {
-                    Log.i("INFO", "code err register")
+            when (responseExists.await()) {
+                200 -> {
+                    val responseRegister: Deferred<Int> = async(Dispatchers.IO) {
+                        registrationViewModel.api(
+                            "register",
+                            name,
+                            email,
+                            password
+                        )
+                    }
+                    val codeRegister = responseRegister.await()
+                    if (codeRegister == 200) {
+                        Log.i("INFO", "######")
+                        //                activity?.runOnUiThread {
+                        //                    playSuccessAnimation(startNewFragment)
+                        //                }
+                    } else {
+                        Log.i("INFO", "code err register")
+                        //                activity?.runOnUiThread {
+                        //                    playErrorAnimation(code)
+                        //                }
+                    }
                 }
-            }
-            else if (codeExists == 409) {
-                Log.i("INFO", "Pouzivatel existuje.")
-            }
-            else if (codeExists == 500) {
-                Log.i("INFO", "Nastala neocakavana chyba.")
+                409 -> {
+                    Log.i("INFO", "Pouzivatel existuje.")
+                }
+                500 -> {
+                    Log.i("INFO", "Nastala neocakavana chyba.")
+                }
+                else -> {
+                    Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                }
             }
         }
     }
