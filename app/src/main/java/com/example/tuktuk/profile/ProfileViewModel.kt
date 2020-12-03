@@ -1,11 +1,11 @@
 package com.example.tuktuk.profile
 
-import android.net.Uri
+import android.content.Context
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.example.tuktuk.database.DataRepository
-import java.io.File
+import java.net.URI
 
 class ProfileViewModel(
     private val repository: DataRepository
@@ -26,7 +26,11 @@ class ProfileViewModel(
         return repository.tokenRefresh(action, refresh)
     }
 
-    suspend fun uploadImage(file: File, token: String): Int {
-        return repository.uploadImage(file, token)
+    suspend fun uploadImage(
+        fileUri: URI,
+        token: String,
+        context: Context
+    ): Int {
+        return repository.uploadImage(fileUri, token, context)
     }
 }

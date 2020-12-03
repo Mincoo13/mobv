@@ -12,13 +12,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.tuktuk.R
+import com.example.tuktuk.database.LocalCache
+import com.example.tuktuk.databinding.FragmentProfileDialogBinding
+import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
 import kotlinx.android.synthetic.main.fragment_profile_dialog.view.*
+import kotlinx.coroutines.*
+import java.net.URI
 
 
 class ProfileDialogFragment: DialogFragment() {
+    private lateinit var profileDialogViewModel: ProfileViewModel
+    private lateinit var binding: FragmentProfileDialogBinding
+    private lateinit var cache: LocalCache
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +53,15 @@ class ProfileDialogFragment: DialogFragment() {
             }
         }
 
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_profile_dialog, container, false
+        )
+
+        binding.lifecycleOwner = this
+        profileDialogViewModel = ViewModelProvider(this, Injection.provideProfileViewModelFactory(requireContext()))
+            .get(ProfileViewModel::class.java)
+        binding.profileDialogViewModel = profileDialogViewModel
+
         return rootView
     }
 
@@ -63,6 +82,32 @@ class ProfileDialogFragment: DialogFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             val uri: Uri? = data?.data
+            if (uri != null) {
+                requireContext().getContentResolver().openInputStream(uri)?.bufferedReader()?.forEachLine {
+                    val toast = Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+            val uriString = uri.toString()
+            val value = uriString.replace("content://", "")
+
+            GlobalScope.launch {
+                val responseExists: Deferred<Int> = async (Dispatchers.IO) {profileDialogViewModel.uploadImage(URI(value), SharedPreferences.token, requireContext()) }
+                when (responseExists.await()) {
+                    200 -> {
+                    }
+                    409 -> {
+                        Log.i("INFO", "Pouzivatel existuje.")
+                    }
+                    500 -> {
+                        Log.i("INFO", "Nastala neocakavana chyba.")
+                    }
+                    else -> {
+                        Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                    }
+                }
+            }
+
             Log.v("INFO", uri.toString())
             SharedPreferences.image = uri.toString()
         }

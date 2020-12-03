@@ -1,22 +1,22 @@
 package com.example.tuktuk.database
 
-import android.net.Uri
-import android.os.FileUtils
-import android.os.Handler
-import android.os.Looper
+import android.content.Context
 import android.util.Log
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import okhttp3.*
+import okhttp3.Headers.Builder
+import okhttp3.Headers.Companion.headersOf
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import retrofit2.http.Header
 import java.io.File
-import java.io.FileInputStream
 import java.net.ConnectException
-
+import java.net.URI
 
 class DataRepository(
     private val cache: LocalCache,
@@ -217,40 +217,51 @@ class DataRepository(
         return responseCode
     }
 
+
     suspend fun uploadImage(
-        file: File,
-        token: String): Int {
+        fileUri: URI,
+        token: String,
+        context: Context
+    ): Int {
 
-        val length = file.length()
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-        val fileInputStream = FileInputStream(file)
+            val file = File(fileUri.getPath())
+            Log.i("INFO", fileUri.toString())
 
-        /*  fileInputStream.use {fileInputStream ->
-             var read: Int
-             val handler = Handler(Looper.getMainLooper())
-
-             while (fileInputStream.read(buffer).also {read = it } != -1)
-         }
+        // val inputStream = context.getContentResolver().openInputStream(Uri.fromFile(file))
+            val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file.readBytes())
+            //body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
 
-         Log.i("INFO", "-----")
+        var myHeaders = Headers
+
+        myHeaders.headersOf("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"")
+        myHeaders.headersOf("Content-Type: image/jpeg")
+
+            val mpart = MultipartBody.Builder().addPart(null, requestFile)
+
+        val map = mapOf("Content-Disposition" to "form-data; name=\"image\"; filename=\"image.jpg\"",
+            "Content-Type" to "image/jpeg")
+        println(map) // {1=x, 2=y, -1=zz}
 
 
+            val outputJson: String = Gson().toJson(ImageRequest(Api.api_key, token))
+            val body2 = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
 
-        val response = api.uploadImage()
-         if (response.isSuccessful) {
-             Log.i("INFO", "Odhlasenie sa podarilo")
-             SharedPreferences.token = ""
-             SharedPreferences.email = ""
-             SharedPreferences.refresh = ""
-             SharedPreferences.profile = ""
-             SharedPreferences.username = ""
-             SharedPreferences.isLogin = false
-             return response.code()
-         }
 
-         Log.i("INFO", "Odhlasenie sa nepodarilo")
-         Log.i("INFO", response.code().toString())*/
+            val response = api.uploadImage(map, body2, mpart)
+             if (response.isSuccessful) {
+                 Log.i("INFO", "Odhlasenie sa podarilo")
+                 SharedPreferences.token = ""
+                 SharedPreferences.email = ""
+                 SharedPreferences.refresh = ""
+                 SharedPreferences.profile = ""
+                 SharedPreferences.username = ""
+                 SharedPreferences.isLogin = false
+                 return response.code()
+             }
+
+             Log.i("INFO", "Odhlasenie sa nepodarilo")
+             Log.i("INFO", response.code().toString())
         return responseCode
     }
 }
