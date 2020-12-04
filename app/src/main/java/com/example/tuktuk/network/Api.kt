@@ -87,13 +87,13 @@ interface Api {
     @POST("service.php")
     suspend fun tokenRefresh(@Body body: RefreshRequest): Response<UserResponse>
 
-    @Headers("Content-Type: multipart/from-data; boundary=boundary")
+//    @Headers("Content-Type: multipart/from-data; boundary=boundary")
     @Multipart
     @POST("upload.php")
     suspend fun uploadImage(
-        @HeaderMap headers: Map<String, String>,
-        @Part check: RequestBody,
-        @Part imageFile: MultipartBody.Builder
+//        @HeaderMap headers: Map<String, String>,
+        @Part check: MultipartBody.Part,
+        @Part imageFile: MultipartBody.Part
     ): Response<UserResponse>
 
 }

@@ -127,6 +127,7 @@ class DataRepository(
                     SharedPreferences.isLogin = true
 //                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
 //                    cache.updateUser(gson.fromJson(response.body()!!))
+
                     Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                     response.code()
                 }
@@ -150,12 +151,15 @@ class DataRepository(
 //        Log.i("INFO", response2.code().toString())
 //        Log.i("INFO", api.tokenRefresh(RefreshRequest("refreshToken", Api.api_key, response.body()!!.refresh)).body().toString())
         if(response.isSuccessful) {
+            Log.i("INFO", "Udaje o pouzivatelovi")
             Log.i("INFO", response.body().toString())
             SharedPreferences.token = response.body()!!.token
             SharedPreferences.email = response.body()!!.email
             SharedPreferences.refresh = response.body()!!.refresh
             SharedPreferences.profile = response.body()!!.token
             SharedPreferences.username = response.body()!!.username
+            SharedPreferences.image = response.body()!!.profile
+//            Log.i("INFO", response.body().toString())
 
             return response.code()
         }
@@ -219,50 +223,74 @@ class DataRepository(
 
 
     suspend fun uploadImage(
-        fileUri: URI,
+        fileUri: File,
         token: String,
         context: Context
     ): Int {
 
-            val file = File(fileUri.getPath())
-            Log.i("INFO", fileUri.toString())
+
+
+        val file = File(fileUri.getPath())
+        Log.i("INFO", fileUri.toString())
+        Log.i("INFO", file.toString())
+//           Log.i("INFO", file.readBytes().toString())
 
         // val inputStream = context.getContentResolver().openInputStream(Uri.fromFile(file))
-            val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file.readBytes())
+//        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             //body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
 
-        var myHeaders = Headers
+//        var myHeaders = Headers
+//
+//        myHeaders.headersOf("Content-Disposition", "form-data; name=\"image\"; filename=\"image.jpg\"")
+//        myHeaders.headersOf("Content-Type", "image/jpeg")
 
-        myHeaders.headersOf("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"")
-        myHeaders.headersOf("Content-Type: image/jpeg")
+//        val mpart = MultipartBody.Builder().addPart(null, requestFile)
 
-            val mpart = MultipartBody.Builder().addPart(null, requestFile)
-
-        val map = mapOf("Content-Disposition" to "form-data; name=\"image\"; filename=\"image.jpg\"",
-            "Content-Type" to "image/jpeg")
-        println(map) // {1=x, 2=y, -1=zz}
-
-
-            val outputJson: String = Gson().toJson(ImageRequest(Api.api_key, token))
-            val body2 = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+//        val map = mapOf("Content-Disposition" to "form-data; name=\"image\"; filename=\"image.jpg\"",
+//            "Content-Type" to "image/jpeg")
+//        println(map) // {1=x, 2=y, -1=zz}
 
 
-            val response = api.uploadImage(map, body2, mpart)
-             if (response.isSuccessful) {
-                 Log.i("INFO", "Odhlasenie sa podarilo")
-                 SharedPreferences.token = ""
-                 SharedPreferences.email = ""
-                 SharedPreferences.refresh = ""
-                 SharedPreferences.profile = ""
-                 SharedPreferences.username = ""
-                 SharedPreferences.isLogin = false
-                 return response.code()
-             }
+        val outputJson: String = Gson().toJson(ImageRequest(Api.api_key, token))
+        val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+        val dataPart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"data\""
+            ),
+            data
+        )
 
-             Log.i("INFO", "Odhlasenie sa nepodarilo")
-             Log.i("INFO", response.code().toString())
-        return responseCode
+        Log.i("INFO", file.absolutePath.toString())
+        val image = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+        val imagePart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"image\"; filename=\"" + file.name + "\""
+            ),
+            image
+        )
+
+//        val body2 = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+//        Log.i("INFO", outputJson.toString())
+
+
+        val response = api.uploadImage(imagePart, dataPart)
+        if (response.isSuccessful) {
+            Log.i("INFO", "Profilova fotka bola uspesne nahrata")
+//            SharedPreferences.token = ""
+//            SharedPreferences.email = ""
+//            SharedPreferences.refresh = ""
+//            SharedPreferences.profile = ""
+//            SharedPreferences.username = ""
+//            SharedPreferences.isLogin = false
+            return response.code()
+        }
+
+        Log.i("INFO", "Profilova fotka sa nepodarila nahrat")
+        Log.i("INFO", response.code().toString())
+        return response.code()
     }
 }
 

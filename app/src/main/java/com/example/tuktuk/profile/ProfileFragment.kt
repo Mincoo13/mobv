@@ -1,5 +1,7 @@
 package com.example.tuktuk.profile
 
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +19,12 @@ import com.example.tuktuk.databinding.FragmentProfileBinding
 import com.example.tuktuk.login.LoginViewModel
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.*
 import kotlinx.coroutines.*
+import kotlinx.android.synthetic.main.fragment_profile.profile_image;
+import kotlinx.android.synthetic.main.media_object.*
 
 class ProfileFragment : Fragment() {
 
@@ -44,7 +51,12 @@ class ProfileFragment : Fragment() {
 
         val uri: Uri = Uri.parse(SharedPreferences.image)
         Log.v("INFO", SharedPreferences.image)
-        binding.imageView3.setImageURI(uri)
+//        binding.profileImage.background.setImageURI(uri)
+        val imageView: CircleImageView = binding.profileImage
+        Picasso.get().load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image).into(imageView)
+//        Picasso.with(requireContext()).load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+//            .placeholder(R.drawable.blank_profile_picture_973460_640).error(R.drawable.blank_profile_picture_973460_640)
+//            .into(imageView);
 
         return binding.root
     }
@@ -65,6 +77,12 @@ class ProfileFragment : Fragment() {
                 ProfileDialogFragment().show(fragmentManager, "ProfileDialogFragment")
             })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val imageView: CircleImageView = binding.profileImage
+        Picasso.get().load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image).into(imageView)
     }
 
     private fun info(token: String) {

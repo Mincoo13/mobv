@@ -2,10 +2,14 @@ package com.example.tuktuk.profile
 
 import android.Manifest
 import android.app.Activity
+import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,9 +23,11 @@ import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentProfileDialogBinding
 import com.example.tuktuk.util.Injection
+import com.example.tuktuk.util.RealPath
 import com.example.tuktuk.util.SharedPreferences
 import kotlinx.android.synthetic.main.fragment_profile_dialog.view.*
 import kotlinx.coroutines.*
+import java.io.File
 import java.net.URI
 
 
@@ -42,7 +48,10 @@ class ProfileDialogFragment: DialogFragment() {
         }
 
         rootView.addPhoto.setOnClickListener{
-            if (ContextCompat.checkSelfPermission(this.requireContext() , Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            if (ContextCompat.checkSelfPermission(
+                    this.requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_DENIED) {
                 // permission denied
                 val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                 //show popup to request runtime permission
@@ -58,7 +67,11 @@ class ProfileDialogFragment: DialogFragment() {
         )
 
         binding.lifecycleOwner = this
-        profileDialogViewModel = ViewModelProvider(this, Injection.provideProfileViewModelFactory(requireContext()))
+        profileDialogViewModel = ViewModelProvider(
+            this, Injection.provideProfileViewModelFactory(
+                requireContext()
+            )
+        )
             .get(ProfileViewModel::class.java)
         binding.profileDialogViewModel = profileDialogViewModel
 
@@ -82,17 +95,26 @@ class ProfileDialogFragment: DialogFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             val uri: Uri? = data?.data
-            if (uri != null) {
-                requireContext().getContentResolver().openInputStream(uri)?.bufferedReader()?.forEachLine {
-                    val toast = Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT)
-                    toast.show()
-                }
-            }
+            Log.i("INFO", "CESTA")
+            Log.i("INFO", uri.toString())
+//            if (uri != null) {
+//                requireContext().getContentResolver().openInputStream(uri)?.bufferedReader()?.forEachLine {
+//                    val toast = Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT)
+//                    toast.show()
+//                }
+//            }
             val uriString = uri.toString()
+            var filePath = context?.let { data.getFilePath(it) }
+
+            Log.i("INFO", "CESTA K IMG")
+            Log.i("INFO", filePath.toString())
+            var file = File(filePath)
             val value = uriString.replace("content://", "")
 
             GlobalScope.launch {
-                val responseExists: Deferred<Int> = async (Dispatchers.IO) {profileDialogViewModel.uploadImage(URI(value), SharedPreferences.token, requireContext()) }
+                val responseExists: Deferred<Int> = async(Dispatchers.IO) {profileDialogViewModel.uploadImage(
+                    file, SharedPreferences.token, requireContext()
+                ) }
                 when (responseExists.await()) {
                     200 -> {
                     }
@@ -114,20 +136,37 @@ class ProfileDialogFragment: DialogFragment() {
     }
 
     //handle requested permission result
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when(requestCode){
             PERMISSION_CODE -> {
-                if (grantResults.size >0 && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED){
+                if (grantResults.size > 0 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
                     //permission from popup granted
                     pickImageFromGallery()
-                }
-                else{
+                } else {
                     //permission from popup denied
-                    Toast.makeText(this.requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.requireContext(), "Permission denied", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
+    }
+
+    fun Intent?.getFilePath(context: Context): String {
+        return this?.data?.let { data -> RealPath.getRealPath(context, data) ?: "" } ?: ""
+    }
+
+    fun Uri?.getFilePath(context: Context): String {
+        return this?.let { uri -> RealPath.getRealPath(context, uri) ?: "" } ?: ""
+    }
+
+    fun ClipData.Item?.getFilePath(context: Context): String {
+        return this?.uri?.getFilePath(context) ?: ""
     }
 
     companion object {

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.example.tuktuk.database.DataRepository
+import java.io.File
 import java.net.URI
 
 class ProfileViewModel(
@@ -27,7 +28,7 @@ class ProfileViewModel(
     }
 
     suspend fun uploadImage(
-        fileUri: URI,
+        fileUri: File,
         token: String,
         context: Context
     ): Int {
