@@ -25,6 +25,7 @@ import com.example.tuktuk.databinding.FragmentProfileDialogBinding
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.RealPath
 import com.example.tuktuk.util.SharedPreferences
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile_dialog.view.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -117,6 +118,7 @@ class ProfileDialogFragment: DialogFragment() {
                 ) }
                 when (responseExists.await()) {
                     200 -> {
+                        Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                     }
                     409 -> {
                         Log.i("INFO", "Pouzivatel existuje.")

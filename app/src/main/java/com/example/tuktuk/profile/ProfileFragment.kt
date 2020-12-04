@@ -23,8 +23,6 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.*
 import kotlinx.coroutines.*
-import kotlinx.android.synthetic.main.fragment_profile.profile_image;
-import kotlinx.android.synthetic.main.media_object.*
 
 class ProfileFragment : Fragment() {
 
@@ -49,11 +47,16 @@ class ProfileFragment : Fragment() {
         binding.emailProfile.text = SharedPreferences.email
         binding.usernameProfile.text = SharedPreferences.username
 
-        val uri: Uri = Uri.parse(SharedPreferences.image)
-        Log.v("INFO", SharedPreferences.image)
+//        val uri: Uri = Uri.parse(SharedPreferences.image)
+//        Log.v("INFO", SharedPreferences.image)
 //        binding.profileImage.background.setImageURI(uri)
-        val imageView: CircleImageView = binding.profileImage
-        Picasso.get().load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image).into(imageView)
+        Log.i("INFO", "ZAVOLALO SA ON CREATE")
+        var imageView: CircleImageView = binding.profileImage
+        Picasso.get()
+            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+            .placeholder(R.drawable.blank_profile_picture_973460_640)
+            .error(R.drawable.blank_profile_picture_973460_640)
+            .into(imageView)
 //        Picasso.with(requireContext()).load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
 //            .placeholder(R.drawable.blank_profile_picture_973460_640).error(R.drawable.blank_profile_picture_973460_640)
 //            .into(imageView);
@@ -63,17 +66,23 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.i("INFO", "ZAVOLALO SA ON VIEW CREATED")
         binding.logOutButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
             Log.i("INFO", SharedPreferences.refresh)
             logout(SharedPreferences.refresh)
         }
 
+        binding.toHomeArrow.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
+        { view: View ->
+            view?.findNavController()?.navigate(R.id.action_profileFragment_to_homeFragment)
+        }
+
         val fragmentManager = (activity as FragmentActivity).supportFragmentManager
 
         binding.apply {
             profileImage.setOnClickListener(View.OnClickListener {
+                onPause()
                 ProfileDialogFragment().show(fragmentManager, "ProfileDialogFragment")
             })
         }
@@ -81,9 +90,28 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Log.i("INFO", "ZAVOLALO SA RESUME")
+        info(SharedPreferences.token)
         val imageView: CircleImageView = binding.profileImage
-        Picasso.get().load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image).into(imageView)
+        Picasso.get()
+            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+            .placeholder(R.drawable.blank_profile_picture_973460_640)
+            .error(R.drawable.blank_profile_picture_973460_640)
+            .into(imageView)
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("INFO", "ZAVOLALO SA PAUSE")
+        info(SharedPreferences.token)
+        val imageView: CircleImageView = binding.profileImage
+        Picasso.get()
+            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+            .placeholder(R.drawable.blank_profile_picture_973460_640)
+            .error(R.drawable.blank_profile_picture_973460_640)
+            .into(imageView)
+    }
+
 
     private fun info(token: String) {
         GlobalScope.launch {

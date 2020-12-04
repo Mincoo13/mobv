@@ -146,7 +146,7 @@ class DataRepository(
         token: String): Int {
         val response = api.userInfo(InfoRequest(action, Api.api_key, token))
         Log.i("INFO", "INFO REFRESH")
-        Log.i("INFO", response.body()!!.refresh)
+//        Log.i("INFO", response.body()!!.refresh)
 //        val response2 = api.tokenRefresh(RefreshRequest(action, Api.api_key, response.body()!!.refresh))
 //        Log.i("INFO", response2.code().toString())
 //        Log.i("INFO", api.tokenRefresh(RefreshRequest("refreshToken", Api.api_key, response.body()!!.refresh)).body().toString())
