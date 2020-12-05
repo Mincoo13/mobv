@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.tuktuk.database.AppDatabase
 import com.example.tuktuk.database.DataRepository
 import com.example.tuktuk.database.LocalCache
+import com.example.tuktuk.home.HomeViewModelFactory
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.login.LoginViewModelFactory
 import com.example.tuktuk.profile.ProfileViewModelFactory
@@ -35,6 +36,12 @@ object Injection {
 
     fun provideProfileViewModelFactory(context: Context): ViewModelProvider.Factory {
         return ProfileViewModelFactory(
+            provideDataRepository(context)
+        )
+    }
+
+    fun provideHomeViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return HomeViewModelFactory(
             provideDataRepository(context)
         )
     }

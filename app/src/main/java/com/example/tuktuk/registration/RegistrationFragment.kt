@@ -102,13 +102,6 @@ class RegistrationFragment : Fragment() {
       return binding.root
   }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun updateDateInView() {
-        val myFormat = "dd.MM.yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        textview_date!!.text = sdf.format(cal.getTime())
-    }
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -161,5 +154,12 @@ class RegistrationFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun updateDateInView() {
+        val myFormat = "dd.MM.yyyy" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        textview_date!!.text = sdf.format(cal.getTime())
     }
 }

@@ -5,6 +5,7 @@ import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
 import com.example.tuktuk.util.AuthInterceptor
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -94,6 +95,13 @@ interface Api {
 //        @HeaderMap headers: Map<String, String>,
         @Part check: MultipartBody.Part,
         @Part imageFile: MultipartBody.Part
+    ): Response<UserResponse>
+
+    @Multipart
+    @POST("post.php")
+    suspend fun uploadVideo(
+        @Part check: MultipartBody.Part,
+        @Part videoFile: MultipartBody.Part
     ): Response<UserResponse>
 
 }
