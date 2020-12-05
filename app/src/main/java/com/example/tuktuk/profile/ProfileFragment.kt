@@ -19,6 +19,7 @@ import com.example.tuktuk.databinding.FragmentProfileBinding
 import com.example.tuktuk.login.LoginViewModel
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.*
@@ -56,6 +57,7 @@ class ProfileFragment : Fragment() {
             .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
             .placeholder(R.drawable.blank_profile_picture_973460_640)
             .error(R.drawable.blank_profile_picture_973460_640)
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
             .into(imageView)
 //        Picasso.with(requireContext()).load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
 //            .placeholder(R.drawable.blank_profile_picture_973460_640).error(R.drawable.blank_profile_picture_973460_640)
@@ -76,6 +78,11 @@ class ProfileFragment : Fragment() {
         binding.toHomeArrow.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
             view?.findNavController()?.navigate(R.id.action_profileFragment_to_homeFragment)
+        }
+
+        binding.changePswButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
+        { view: View ->
+            view?.findNavController()?.navigate(R.id.action_profileFragment_to_changePasswordFragment)
         }
 
         val fragmentManager = (activity as FragmentActivity).supportFragmentManager

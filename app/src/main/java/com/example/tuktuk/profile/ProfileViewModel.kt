@@ -24,7 +24,7 @@ class ProfileViewModel(
 
     suspend fun userLogout(action: String, refresh: String): Int {
         Log.i("INFO", refresh)
-        return repository.tokenRefresh(action, refresh)
+        return repository.tokenRefresh(action, refresh, "logout")
     }
 
     suspend fun uploadImage(
@@ -33,5 +33,9 @@ class ProfileViewModel(
         context: Context
     ): Int {
         return repository.uploadImage(fileUri, token, context)
+    }
+
+    suspend fun removeImage(action: String, token: String): Int {
+        return repository.removeImage(action, token)
     }
 }

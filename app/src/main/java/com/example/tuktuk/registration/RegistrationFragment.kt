@@ -107,9 +107,7 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         registrationViewModel.isValid.observe(viewLifecycleOwner, Observer<Boolean> { isValidated ->
-            if (isValidated) {
-                binding.registerButton.isEnabled = true
-            }
+            binding.registerButton.isEnabled = isValidated
         })
 
         binding.registerButton.setOnClickListener {

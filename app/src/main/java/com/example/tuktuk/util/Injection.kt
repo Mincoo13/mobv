@@ -8,6 +8,7 @@ import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.home.HomeViewModelFactory
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.login.LoginViewModelFactory
+import com.example.tuktuk.profile.ChangePasswordViewModelFactory
 import com.example.tuktuk.profile.ProfileViewModelFactory
 import com.example.tuktuk.registration.RegistrationViewModelFactory
 
@@ -42,6 +43,12 @@ object Injection {
 
     fun provideHomeViewModelFactory(context: Context): ViewModelProvider.Factory {
         return HomeViewModelFactory(
+            provideDataRepository(context)
+        )
+    }
+
+    fun provideChangePasswordViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return ChangePasswordViewModelFactory(
             provideDataRepository(context)
         )
     }

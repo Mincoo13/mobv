@@ -64,13 +64,29 @@ interface Api {
     @POST("service.php")
     suspend fun userExists(@Body body: UserExistsRequest): Response<ExistsResponse>
 
-    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @Headers(
+        "Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json"
+    )
     @POST("service.php")
     suspend fun userNameExists(@Body body: UserExistsRequest) : Response<ExistsResponse>
 
-    @Headers("Accept: application/json", "Cache-Control: no-cache", "Content-Type: application/json")
+    @Headers(
+        "Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json"
+    )
     @POST("service.php")
     suspend fun userLogin(@Body body: LoginRequest): Response<UserResponse>
+
+    @Headers(
+        "Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json"
+    )
+    @POST("service.php")
+    suspend fun passwordChange(@Body body: PasswordChangeRequest): Response<Any>
 
     @Headers(
         "Accept: application/json",
@@ -96,6 +112,14 @@ interface Api {
         @Part check: MultipartBody.Part,
         @Part imageFile: MultipartBody.Part
     ): Response<UserResponse>
+
+    @Headers(
+        "Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json"
+    )
+    @POST("service.php")
+    suspend fun removeImage(@Body body: RemoveImageRequest): Response<Any>
 
     @Multipart
     @POST("post.php")
