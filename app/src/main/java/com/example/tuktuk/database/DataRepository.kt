@@ -1,7 +1,6 @@
 package com.example.tuktuk.database
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
@@ -292,13 +291,12 @@ class DataRepository(
     }
 
     suspend fun uploadVideo(
-        fileUri: Uri,
+        fileUri: File,
         token: String,
         context: Context
     ): Int {
-        val file = File(fileUri.getPath())
-        Log.i("INFO", fileUri.toString())
-        Log.i("INFO", file.toString())
+
+        val file = File(fileUri.path)
 
         val outputJson: String = Gson().toJson(VideoRequest(Api.api_key, token))
         val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
@@ -310,18 +308,16 @@ class DataRepository(
             data
         )
 
-        Log.i("INFO", file.absolutePath.toString())
-        val image = RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
+        val video = RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
         val imagePart = MultipartBody.Part.create(
             headersOf(
                 "Content-Disposition",
                 "form-data; name=\"video\"; filename=\"" + file.name + "\""
             ),
-            image
+            video
         )
         val response = api.uploadVideo(imagePart, dataPart)
 
-        Log.i("INFO", response.toString())
         if (response.isSuccessful) {
             Log.i("INFO", "Video bolo uspesne nahrate")
             return response.code()

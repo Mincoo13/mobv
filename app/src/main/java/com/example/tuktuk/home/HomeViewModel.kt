@@ -1,9 +1,9 @@
 package com.example.tuktuk.home
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.*
 import com.example.tuktuk.database.*
+import java.io.File
 
 
 class HomeViewModel(
@@ -15,7 +15,7 @@ class HomeViewModel(
     }
 
     suspend fun uploadVideo(
-        fileUri: Uri,
+        fileUri: File,
         token: String,
         context: Context
     ): Int {

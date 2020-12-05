@@ -24,7 +24,6 @@ import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentHomeBinding
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -34,6 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var cache: LocalCache
     lateinit var videoUri : Uri
+    lateinit var videoFile : File
     val REQUEST_VIDEO_CAPTURE=1
 
     override fun onCreateView(
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
 
     /*VIDEO*/
     private fun recordVideo(){
-        val videoFile=createVideoFile()
+        videoFile =createVideoFile()
         Log.i("Info", this.requireContext().toString())
         if(videoFile !=null){
             videoUri= FileProvider.getUriForFile(
@@ -102,7 +102,7 @@ class HomeFragment : Fragment() {
 
 //            video_view.setVideoURI(videoUri)
             //video_view.start()
-            uploadVideo(videoUri)
+            uploadVideo()
         }
     }
 
@@ -116,14 +116,15 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun uploadVideo(videoUri: Uri) {
+    private fun uploadVideo() {
         GlobalScope.launch {
             val responseExists: Deferred<Int> = async(Dispatchers.IO) {homeViewModel.uploadVideo(
-                videoUri, SharedPreferences.token, requireContext()
+                videoFile, SharedPreferences.token, requireContext()
             ) }
             when (responseExists.await()) {
                 200 -> {
-                    Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+                    Log.i("INFO", "Video bolo uploadnute.")
+//                    Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                 }
                 409 -> {
                     Log.i("INFO", "Pouzivatel existuje.")
