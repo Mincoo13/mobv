@@ -1,4 +1,4 @@
-package com.example.tuktuk
+package com.example.tuktuk.login
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
@@ -11,15 +11,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentLoginBinding
-import com.example.tuktuk.databinding.FragmentRegistrationBinding
-import com.example.tuktuk.registration.LoginViewModel
-import com.example.tuktuk.registration.RegistrationViewModel
 import com.example.tuktuk.util.Injection
-import kotlinx.android.synthetic.main.fragment_login.*
+import com.example.tuktuk.util.SharedPreferences
 import kotlinx.coroutines.*
-import java.lang.RuntimeException
 
 /**
  * A simple [Fragment] subclass.
@@ -37,6 +35,11 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val navController = findNavController()
+        if (SharedPreferences.isLogin) {
+            navController.navigate(R.id.action_loginFragment_to_homeFragment)
+        }
 
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
@@ -76,6 +79,8 @@ class LoginFragment : Fragment() {
             when (responseExists.await()) {
                 409 -> {
                     val response: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userLogin("login", name, password)}
+                    Log.i("INFO", "PRIHLASOVANIE $name $password")
+                    Log.i("INFO", response.await().toString())
                     when (response.await()) {
                         200 -> {
                             Log.i("INFO", "Pouzivatel prihlaseny.")

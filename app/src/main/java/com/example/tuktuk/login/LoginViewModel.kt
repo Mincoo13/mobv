@@ -1,4 +1,4 @@
-package com.example.tuktuk.registration
+package com.example.tuktuk.login
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*

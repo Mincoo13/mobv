@@ -1,6 +1,7 @@
 package com.example.tuktuk.util
 
 import android.util.Log
+import com.example.tuktuk.network.Api.Companion.useAuth
 import com.example.tuktuk.registration.RegistrationFragment
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -16,6 +17,10 @@ class AuthInterceptor : Interceptor {
             .addHeader("Cache-Control","no-cache")
             .addHeader("Accept","application/json")
             .addHeader("Content-Type","application/json")
+
+        if (useAuth) {
+
+        }
 
         return chain.proceed(request.build())
     }

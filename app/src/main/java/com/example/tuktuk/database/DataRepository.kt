@@ -1,15 +1,19 @@
 package com.example.tuktuk.database
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
-import com.example.tuktuk.network.request.UserExistsRequest
-import com.example.tuktuk.network.request.LoginRequest
-import com.example.tuktuk.network.request.UserRequest
+import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.UserResponse
+import com.example.tuktuk.util.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
+import okhttp3.*
+import okhttp3.Headers.Companion.headersOf
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.File
 import java.net.ConnectException
 
 class DataRepository(
@@ -31,6 +35,8 @@ class DataRepository(
             }
     }
 
+    fun checkExistUserByUsername(username: String?): Boolean = cache.checkExistUserByUsername(username)
+    fun checkExistUserByEmail(email: String?): Boolean = cache.checkExistUserByEmail(email)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -39,10 +45,13 @@ class DataRepository(
         email: String,
         username: String,
         password: String): Int {
-        Api.setAuthentication(false)
+        Api.setAuth(false)
         try {
             val response = api.userRegister(UserRequest(action, Api.api_key, username, email, password))
             Log.i("INFO", response.toString())
+            Log.i("INFO", "----------------------------")
+            Log.i("INFO", username)
+            Log.i("INFO", password)
 //            Log.i("INFO", response.body()!!.toString())
 //            Log.i("INFO", response.body()!!.email)
             if (response.isSuccessful) {
@@ -50,8 +59,7 @@ class DataRepository(
                     Log.i("INFO", "INSERT TO DATABASE")
                     cache.insertUser(gson.fromJson(response.body()!!))
                     Log.i("INFO", "# USER")
-                    cache.getUser(response.body()!!.id)
-                    Log.i("INFO", cache.getUser("41").toString())
+                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                 }
                 return response.code()
             }
@@ -71,9 +79,8 @@ class DataRepository(
         try {
             val response = api.userExists(UserExistsRequest(action, Api.api_key, username))
 
-
+            Log.i("INFO", response.body()!!.exists.toString())
             if (response.isSuccessful) {
-                Log.i("INFO", response.body()!!.exists.toString())
                 if (response.body()!!.exists) {
                     Log.i("INFO", "Pouzivatel existuje")
                     return 409
@@ -98,25 +105,231 @@ class DataRepository(
         action: String,
         username: String,
         password: String): Int {
+        Api.setAuth(false)
         try {
             val response = api.userLogin(LoginRequest(action, Api.api_key, username, password))
             Log.i("INFO", "LOGIN")
             Log.i("INFO", response.toString())
+            Log.i("INFO", username)
+            Log.i("INFO", password)
             if(response.isSuccessful) {
                 return if(response.body() == null) {
                     Log.i("INFO", "BAD CREDENTIALS")
                     401
-                } else{
-                    Log.i("INFO", response.body().toString())
+                } else {
+                    SharedPreferences.token = response.body()!!.token
+                    SharedPreferences.email = response.body()!!.email
+                    SharedPreferences.refresh = response.body()!!.refresh
+                    SharedPreferences.profile = response.body()!!.token
+                    SharedPreferences.username = response.body()!!.username
+                    SharedPreferences.isLogin = true
+//                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
+//                    cache.updateUser(gson.fromJson(response.body()!!))
+
+                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                     response.code()
                 }
             }
             Log.i("INFO", "Stala sa velmi skareda vec")
             return responseCode
         } catch (ex: Exception){
+            Log.i("INFO", ex.toString())
             return 401
         }
 
+    }
+
+    suspend fun userInfo(
+        action: String,
+        token: String): Int {
+        val response = api.userInfo(InfoRequest(action, Api.api_key, token))
+        Log.i("INFO", "INFO REFRESH")
+//        Log.i("INFO", response.body()!!.refresh)
+//        val response2 = api.tokenRefresh(RefreshRequest(action, Api.api_key, response.body()!!.refresh))
+//        Log.i("INFO", response2.code().toString())
+//        Log.i("INFO", api.tokenRefresh(RefreshRequest("refreshToken", Api.api_key, response.body()!!.refresh)).body().toString())
+        if(response.isSuccessful) {
+            Log.i("INFO", "Udaje o pouzivatelovi")
+            Log.i("INFO", response.body().toString())
+            SharedPreferences.token = response.body()!!.token
+            SharedPreferences.email = response.body()!!.email
+            SharedPreferences.refresh = response.body()!!.refresh
+            SharedPreferences.profile = response.body()!!.token
+            SharedPreferences.username = response.body()!!.username
+            SharedPreferences.image = response.body()!!.profile
+//            Log.i("INFO", response.body().toString())
+
+            return response.code()
+        }
+        else {
+            Log.i("INFO", "USER INFO ZLY TOKEN")
+            Log.i("INFO", response.code().toString())
+            return response.code()
+        }
+//        Log.i("INFO", "Nieco nepravdepoodbne")
+//        return responseCode
+
+    }
+
+    suspend fun tokenRefresh(
+        action: String,
+        refresh: String): Int {
+        Log.i("INFO", "-----")
+        Log.i("INFO", refresh)
+        Log.i("INFO", "-----")
+        val response = api.tokenRefresh(RefreshRequest(action, Api.api_key, refresh))
+        if (response.isSuccessful) {
+            Log.i("INFO", "Odhlasenie sa podarilo")
+            SharedPreferences.token = ""
+            SharedPreferences.email = ""
+            SharedPreferences.refresh = ""
+            SharedPreferences.profile = ""
+            SharedPreferences.username = ""
+            SharedPreferences.isLogin = false
+            return response.code()
+        }
+
+        Log.i("INFO", "Odhlasenie sa nepodarilo")
+        Log.i("INFO", response.code().toString())
+        return responseCode
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun userNameExists(
+        action: String,
+        username: String): Int {
+        try {
+            val response = api.userNameExists(UserExistsRequest(action, Api.api_key, username))
+            if (response.isSuccessful) {
+                if (response.body()!!.exists) {
+                    Log.i("INFO", "Pouzivatel existuje")
+                    return 409
+                }
+                else {
+                    Log.i("INFO", "Pouzivatel neexistuje")
+                    return response.code()
+                }
+            }
+            return responseCode
+
+        } catch (ex:  ConnectException){
+            ex.printStackTrace()
+        }
+        return responseCode
+    }
+
+
+    suspend fun uploadImage(
+        fileUri: File,
+        token: String,
+        context: Context
+    ): Int {
+
+
+
+        val file = File(fileUri.getPath())
+        Log.i("INFO", fileUri.toString())
+        Log.i("INFO", file.toString())
+//           Log.i("INFO", file.readBytes().toString())
+
+        // val inputStream = context.getContentResolver().openInputStream(Uri.fromFile(file))
+//        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+            //body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+
+//        var myHeaders = Headers
+//
+//        myHeaders.headersOf("Content-Disposition", "form-data; name=\"image\"; filename=\"image.jpg\"")
+//        myHeaders.headersOf("Content-Type", "image/jpeg")
+
+//        val mpart = MultipartBody.Builder().addPart(null, requestFile)
+
+//        val map = mapOf("Content-Disposition" to "form-data; name=\"image\"; filename=\"image.jpg\"",
+//            "Content-Type" to "image/jpeg")
+//        println(map) // {1=x, 2=y, -1=zz}
+
+
+        val outputJson: String = Gson().toJson(ImageRequest(Api.api_key, token))
+        val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+        val dataPart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"data\""
+            ),
+            data
+        )
+
+        Log.i("INFO", file.absolutePath.toString())
+        val image = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+        val imagePart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"image\"; filename=\"" + file.name + "\""
+            ),
+            image
+        )
+
+//        val body2 = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+//        Log.i("INFO", outputJson.toString())
+
+
+        val response = api.uploadImage(imagePart, dataPart)
+        if (response.isSuccessful) {
+            Log.i("INFO", "Profilova fotka bola uspesne nahrata")
+//            SharedPreferences.token = ""
+//            SharedPreferences.email = ""
+//            SharedPreferences.refresh = ""
+//            SharedPreferences.profile = ""
+//            SharedPreferences.username = ""
+//            SharedPreferences.isLogin = false
+            return response.code()
+        }
+
+        Log.i("INFO", "Profilova fotka sa nepodarila nahrat")
+        Log.i("INFO", response.code().toString())
+        return response.code()
+    }
+
+    suspend fun uploadVideo(
+        fileUri: Uri,
+        token: String,
+        context: Context
+    ): Int {
+        val file = File(fileUri.getPath())
+        Log.i("INFO", fileUri.toString())
+        Log.i("INFO", file.toString())
+
+        val outputJson: String = Gson().toJson(VideoRequest(Api.api_key, token))
+        val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
+        val dataPart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"data\""
+            ),
+            data
+        )
+
+        Log.i("INFO", file.absolutePath.toString())
+        val image = RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
+        val imagePart = MultipartBody.Part.create(
+            headersOf(
+                "Content-Disposition",
+                "form-data; name=\"video\"; filename=\"" + file.name + "\""
+            ),
+            image
+        )
+        val response = api.uploadVideo(imagePart, dataPart)
+
+        Log.i("INFO", response.toString())
+        if (response.isSuccessful) {
+            Log.i("INFO", "Video bolo uspesne nahrate")
+            return response.code()
+        }
+
+        Log.i("INFO", "Video sa nepodarilo nahrat")
+        Log.i("INFO", response.code().toString())
+        return response.code()
     }
 }
 

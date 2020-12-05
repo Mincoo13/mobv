@@ -95,6 +95,7 @@
                 android:layout_marginTop="200dp"
                 android:layout_marginEnd="32dp"
                 android:ems="10"
+                android:text="@={registrationViewModel.name}"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toTopOf="@+id/emailInput"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +112,7 @@
                 android:layout_marginBottom="15dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:text="test@test.com"
+                android:text="@={registrationViewModel.email}"
                 app:layout_constraintBottom_toTopOf="@+id/passwordInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/email"
@@ -126,7 +127,7 @@
                 android:layout_marginBottom="15dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="test"
+                android:text="@={registrationViewModel.password}"
                 app:layout_constraintBottom_toTopOf="@+id/passwordCheckInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/password"
@@ -139,15 +140,16 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="15dp"
+                android:afterTextChanged="@{() -> registrationViewModel.validatePassword()}"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="test"
+                android:text="@={registrationViewModel.passwordCheck}"
                 app:layout_constraintBottom_toTopOf="@+id/ageInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/passwordCheck"
                 app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
 
-            <EditText
+            <TextView
                 android:id="@+id/ageInput"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
@@ -155,8 +157,7 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
                 android:ems="10"
-                android:inputType="date"
-                android:text="5.5.2000"
+                android:text="@={registrationViewModel.age}"
                 app:layout_constraintBottom_toTopOf="@+id/messageRegister"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/age"
@@ -168,8 +169,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAlignment="center"
-                android:textColor="?attr/colorError"
-                android:visibility="gone"
+                android:textColor="#000000"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/registerButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -201,6 +202,71 @@
                 app:layout_constraintBaseline_toBaselineOf="@+id/registerButton"
                 app:layout_constraintEnd_toStartOf="@+id/registerButton"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/nameResponse"
+                android:layout_width="213dp"
+                android:layout_height="19dp"
+                android:layout_marginTop="3dp"
+                android:textColor="?attr/colorError"
+                android:text="@{registrationViewModel.nameResponse}"
+                app:layout_constraintBottom_toTopOf="@+id/emailInput"
+                app:layout_constraintEnd_toEndOf="@+id/nameInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/nameInput"
+                app:layout_constraintTop_toBottomOf="@+id/nameInput" />
+
+            <TextView
+                android:id="@+id/emailResponse"
+                android:layout_width="213dp"
+                android:layout_height="19dp"
+                android:textColor="?attr/colorError"
+                android:text="@{registrationViewModel.emailResponse}"
+                app:layout_constraintBottom_toTopOf="@+id/passwordInput"
+                app:layout_constraintEnd_toEndOf="@+id/emailInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/emailInput"
+                app:layout_constraintTop_toBottomOf="@+id/emailInput"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/passwordResponse"
+                android:layout_width="213dp"
+                android:layout_height="19dp"
+                android:text="@{registrationViewModel.passwordResponse}"
+                android:textColor="?attr/colorError"
+                app:layout_constraintBottom_toTopOf="@+id/passwordCheckInput"
+                app:layout_constraintEnd_toEndOf="@+id/passwordInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/passwordInput"
+                app:layout_constraintTop_toBottomOf="@+id/passwordInput"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/passwordCheckResponse"
+                android:layout_width="213dp"
+                android:layout_height="19dp"
+                android:text="@{registrationViewModel.passwordCheckResponse}"
+                android:textColor="?attr/colorError"
+                app:layout_constraintBottom_toTopOf="@+id/ageInput"
+                app:layout_constraintEnd_toEndOf="@+id/passwordCheckInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/passwordCheckInput"
+                app:layout_constraintTop_toBottomOf="@+id/passwordCheckInput"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/ageResponse"
+                android:layout_width="213dp"
+                android:layout_height="19dp"
+                android:text="@{registrationViewModel.ageResponse}"
+                android:textColor="?attr/colorError"
+                app:layout_constraintBottom_toTopOf="@+id/ageInput"
+                app:layout_constraintEnd_toEndOf="@+id/ageInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/passwordCheckInput"
+                app:layout_constraintTop_toBottomOf="@+id/ageInput"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
