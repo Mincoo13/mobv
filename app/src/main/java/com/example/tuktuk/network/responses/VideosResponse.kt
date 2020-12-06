@@ -11,4 +11,4 @@ data class VideosResponse (
 //        val videourl: String,
         val username: String,
         val profile: String,
-        @Json(name = "videourl") val videourl: String)
+        @Json(name = "videourl") var videourl: String)
