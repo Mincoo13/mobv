@@ -21,4 +21,5 @@
     <string name="addPhotoFromGallery">Pridať fotografiu z galérie</string>
     <string name="getPhoto">Pridať fotografiu pomocou fotoaparáta</string>
     <string name="close">Zavrieť</string>
+    <string name="old_password">Aktuálne heslo</string>
 </resources>

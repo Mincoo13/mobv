@@ -26,6 +26,7 @@ import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.RealPath
 import com.example.tuktuk.util.SharedPreferences
 import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_profile_dialog.view.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -46,6 +47,10 @@ class ProfileDialogFragment: DialogFragment() {
 
         rootView.close.setOnClickListener{
             dismiss()
+        }
+
+        rootView.removeImage.setOnClickListener {
+            removeImage(SharedPreferences.token)
         }
 
         rootView.addPhoto.setOnClickListener{
@@ -118,6 +123,7 @@ class ProfileDialogFragment: DialogFragment() {
                 ) }
                 when (responseExists.await()) {
                     200 -> {
+                        Log.i("INFO", "INVALIDATE")
                         Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                     }
                     409 -> {
@@ -154,6 +160,20 @@ class ProfileDialogFragment: DialogFragment() {
                     //permission from popup denied
                     Toast.makeText(this.requireContext(), "Permission denied", Toast.LENGTH_SHORT)
                         .show()
+                }
+            }
+        }
+    }
+
+    private fun removeImage(token: String){
+        GlobalScope.launch {
+            val response: Deferred<Int> = async (Dispatchers.IO) {profileDialogViewModel.removeImage("clearPhoto", token)}
+            when (response.await()) {
+                200 -> {
+                    Log.i("INFO", "Success")
+                }
+                else -> {
+                    Log.i("INFO", "Failed")
                 }
             }
         }

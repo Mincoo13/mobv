@@ -1,12 +1,12 @@
 package com.example.tuktuk.database
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.UserResponse
+import com.example.tuktuk.network.responses.VideosResponse
 import com.example.tuktuk.util.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -139,6 +139,43 @@ class DataRepository(
 
     }
 
+    suspend fun passwordChange(
+        action: String,
+        token: String,
+        oldPassword: String,
+        newPassword: String): Int {
+        try {
+//            var responseRefresh = tokenRefresh("refreshToken", SharedPreferences.refresh, "password")
+//            var responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, SharedPreferences.token))
+//            Log.i("INFO", "ZMENA HESLA")
+//            Log.i("INFO", responseUser.body()!!.token)
+            val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword))
+//            responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, token))
+//            Log.i("INFO", responseUser.body()!!.token)
+//            Log.i("INFO", SharedPreferences.token)
+            if(response.isSuccessful) {
+                return if(response.body() == null) {
+                    Log.i("INFO", "BAD CREDENTIALS")
+                    401
+                } else {
+
+//                    SharedPreferences.isLogin = true
+//                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
+//                    cache.updateUser(gson.fromJson(response.body()!!))
+                    Log.i("INFO", "ZMENA HESLA SA USPESNE PODARILA")
+                    Log.i("INFO", response.body().toString())
+                    response.code()
+                }
+            }
+            Log.i("INFO", "Stala sa velmi skareda vec")
+            return responseCode
+        } catch (ex: Exception){
+            Log.i("INFO", ex.toString())
+            return 401
+        }
+
+    }
+
     suspend fun userInfo(
         action: String,
         token: String): Int {
@@ -173,20 +210,30 @@ class DataRepository(
 
     suspend fun tokenRefresh(
         action: String,
-        refresh: String): Int {
+        refresh: String,
+        intent: String): Int {
         Log.i("INFO", "-----")
         Log.i("INFO", refresh)
         Log.i("INFO", "-----")
         val response = api.tokenRefresh(RefreshRequest(action, Api.api_key, refresh))
         if (response.isSuccessful) {
-            Log.i("INFO", "Odhlasenie sa podarilo")
-            SharedPreferences.token = ""
-            SharedPreferences.email = ""
-            SharedPreferences.refresh = ""
-            SharedPreferences.profile = ""
-            SharedPreferences.username = ""
-            SharedPreferences.isLogin = false
-            return response.code()
+            if (intent == "logout") {
+                Log.i("INFO", "Odhlasenie sa podarilo")
+                SharedPreferences.token = ""
+                SharedPreferences.email = ""
+                SharedPreferences.refresh = ""
+                SharedPreferences.profile = ""
+                SharedPreferences.username = ""
+                SharedPreferences.isLogin = false
+                return response.code()
+            }
+            else if (intent == "password") {
+                SharedPreferences.token = response.body()!!.token
+                SharedPreferences.refresh = response.body()!!.refresh
+                SharedPreferences.isLogin = true
+                return response.code()
+            }
+
         }
 
         Log.i("INFO", "Odhlasenie sa nepodarilo")
@@ -291,14 +338,44 @@ class DataRepository(
         return response.code()
     }
 
+    suspend fun removeImage(
+        action: String,
+        token: String): Int {
+        try {
+            val response = api.removeImage(RemoveImageRequest(action, Api.api_key, token))
+//            Log.i("INFO", "LOGIN")
+//            Log.i("INFO", response.toString())
+            if(response.isSuccessful) {
+                Log.i("INFO", response.body().toString())
+                when (response.code()) {
+                    200 -> {
+                        Log.i("INFO", "Profilova fotka uspesne zmazana")
+                        SharedPreferences.image = ""
+                        return response.code()
+                    }
+                    else -> {
+                        Log.i("INFO", "Nepodarilo sa profilovu fotku zmazat")
+                        Log.i("INFO", response.code().toString())
+                        return response.code()
+                    }
+                }
+            }
+            Log.i("INFO", "Nastala chyba.")
+            return responseCode
+        } catch (ex: Exception){
+            Log.i("INFO", ex.toString())
+            return responseCode
+        }
+
+    }
+
     suspend fun uploadVideo(
-        fileUri: Uri,
+        fileUri: File,
         token: String,
         context: Context
     ): Int {
-        val file = File(fileUri.getPath())
-        Log.i("INFO", fileUri.toString())
-        Log.i("INFO", file.toString())
+
+        val file = File(fileUri.path)
 
         val outputJson: String = Gson().toJson(VideoRequest(Api.api_key, token))
         val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
@@ -310,18 +387,16 @@ class DataRepository(
             data
         )
 
-        Log.i("INFO", file.absolutePath.toString())
-        val image = RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
+        val video = RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
         val imagePart = MultipartBody.Part.create(
             headersOf(
                 "Content-Disposition",
                 "form-data; name=\"video\"; filename=\"" + file.name + "\""
             ),
-            image
+            video
         )
         val response = api.uploadVideo(imagePart, dataPart)
 
-        Log.i("INFO", response.toString())
         if (response.isSuccessful) {
             Log.i("INFO", "Video bolo uspesne nahrate")
             return response.code()
@@ -330,6 +405,15 @@ class DataRepository(
         Log.i("INFO", "Video sa nepodarilo nahrat")
         Log.i("INFO", response.code().toString())
         return response.code()
+    }
+
+    suspend fun getVideos(): List<VideosResponse>? {
+        val response = api.getVideos(AllVideosRequest("posts", Api.api_key, SharedPreferences.token))
+        if(response.isSuccessful) {
+            return response.body()
+        }
+
+        return ArrayList()
     }
 }
 

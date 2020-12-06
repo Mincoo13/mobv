@@ -14,17 +14,19 @@ import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tuktuk.Adapter.MediaAdapter
+import com.example.tuktuk.Adapter.VideoGridAdapter
 import com.example.tuktuk.MediaObject
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentHomeBinding
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var cache: LocalCache
     lateinit var videoUri : Uri
+    lateinit var videoFile : File
     val REQUEST_VIDEO_CAPTURE=1
 
     override fun onCreateView(
@@ -43,6 +46,7 @@ class HomeFragment : Fragment() {
 
         binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater,
             R.layout.fragment_home,container,false)
+
         binding.lifecycleOwner = this
         homeViewModel = ViewModelProvider(this, Injection.provideHomeViewModelFactory(requireContext())).get(HomeViewModel::class.java)
         binding.homeViewModel = homeViewModel
@@ -56,17 +60,24 @@ class HomeFragment : Fragment() {
             recordVideo()
         }
 
+        val adapter = VideoGridAdapter()
+        binding.recyclerView.adapter = adapter
+
+        val manager = GridLayoutManager(activity, 1)
+        binding.recyclerView.layoutManager = manager
+        binding.recyclerView.setHasFixedSize(true)
+
+        binding.setLifecycleOwner(this)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+//        val adapter = MediaAdapter();
         val exampleList = generateDummyList(20)
-        recycler_view.adapter = MediaAdapter(exampleList)
-        recycler_view.layoutManager = LinearLayoutManager(this.requireContext())
-        recycler_view.setHasFixedSize(true)
+
 
     }
 
@@ -81,7 +92,7 @@ class HomeFragment : Fragment() {
 
     /*VIDEO*/
     private fun recordVideo(){
-        val videoFile=createVideoFile()
+        videoFile =createVideoFile()
         Log.i("Info", this.requireContext().toString())
         if(videoFile !=null){
             videoUri= FileProvider.getUriForFile(
@@ -102,7 +113,7 @@ class HomeFragment : Fragment() {
 
 //            video_view.setVideoURI(videoUri)
             //video_view.start()
-            uploadVideo(videoUri)
+            uploadVideo()
         }
     }
 
@@ -116,14 +127,15 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun uploadVideo(videoUri: Uri) {
+    private fun uploadVideo() {
         GlobalScope.launch {
             val responseExists: Deferred<Int> = async(Dispatchers.IO) {homeViewModel.uploadVideo(
-                videoUri, SharedPreferences.token, requireContext()
+                videoFile, SharedPreferences.token, requireContext()
             ) }
             when (responseExists.await()) {
                 200 -> {
-                    Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+                    Log.i("INFO", "Video bolo uploadnute.")
+//                    Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                 }
                 409 -> {
                     Log.i("INFO", "Pouzivatel existuje.")

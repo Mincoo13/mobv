@@ -3,8 +3,6 @@ package com.example.tuktuk.login
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.tuktuk.database.*
-import com.example.tuktuk.network.MarsUser
-import kotlinx.coroutines.launch
 
 
 class LoginViewModel(

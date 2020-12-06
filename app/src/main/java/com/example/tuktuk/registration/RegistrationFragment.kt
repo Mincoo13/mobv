@@ -107,9 +107,7 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         registrationViewModel.isValid.observe(viewLifecycleOwner, Observer<Boolean> { isValidated ->
-            if (isValidated) {
-                binding.registerButton.isEnabled = true
-            }
+            binding.registerButton.isEnabled = isValidated
         })
 
         binding.registerButton.setOnClickListener {
@@ -123,24 +121,24 @@ class RegistrationFragment : Fragment() {
             when (responseExists.await()) {
                 200 -> {
                     val responseRegister: Deferred<Int> = async(Dispatchers.IO) {
+                        Log.i("INFO", "######")
+                        Log.i("INFO", "REGISTER FORM")
+                        Log.i("INFO", registrationViewModel.name.value!!)
+                        Log.i("INFO", registrationViewModel.email.value!!)
+                        Log.i("INFO", registrationViewModel.password.value!!)
                         registrationViewModel.api(
                             "register",
-                            name,
-                            email,
-                            password
+                            registrationViewModel.name.value!!,
+                            registrationViewModel.email.value!!,
+                            registrationViewModel.password.value!!
                         )
                     }
                     val codeRegister = responseRegister.await()
                     if (codeRegister == 200) {
                         Log.i("INFO", "######")
-                        //                activity?.runOnUiThread {
-                        //                    playSuccessAnimation(startNewFragment)
-                        //                }
+                        view?.findNavController()?.navigate(R.id.loginFragment)
                     } else {
                         Log.i("INFO", "code err register")
-                        //                activity?.runOnUiThread {
-                        //                    playErrorAnimation(code)
-                        //                }
                     }
                 }
                 409 -> {
