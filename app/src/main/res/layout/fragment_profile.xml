@@ -5,15 +5,15 @@
 
     <data>
         <variable
-            name="registration"
-            type="com.example.tuktuk.registration.RegistrationFragment" />
+            name="profileViewModel"
+            type="com.example.tuktuk.profile.ProfileViewModel" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".registration.RegistrationFragment"
-        android:id="@+id/registration_layout"
+        tools:context=".profile.ProfileFragment"
+        android:id="@+id/profile_layout"
         android:background="@drawable/gradient_animation">
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -73,7 +73,15 @@ class ChangePasswordViewModel(
     }
 
     suspend fun passwordChange(action: String, token: String, oldPassword: String, newPassword: String): Int {
-        return repository.passwordChange(action, token, oldPassword, newPassword)
+        val response = repository.passwordChange(action, token, oldPassword, newPassword)
+        if (response == 401) {
+            _newPasswordCheckResponse.postValue("Aktuálne heslo je nesprávne.")
+        }
+        return response
+    }
+
+    suspend fun userInfo(action: String, token: String): Int {
+        return repository.userInfo(action, token)
     }
 
 }

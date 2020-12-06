@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
         cache = Injection.provideCache(context!!)
         val animDrawable = binding.loginLayout.background as AnimationDrawable
         animDrawable.setEnterFadeDuration(10)
-        animDrawable.setExitFadeDuration(5000)
+        animDrawable.setExitFadeDuration(2000)
         animDrawable.start()
 
         binding.toRegistrationButton.setOnClickListener { view : View ->

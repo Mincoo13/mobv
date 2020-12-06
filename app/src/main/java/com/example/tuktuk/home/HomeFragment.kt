@@ -53,10 +53,12 @@ class HomeFragment : Fragment() {
 
         cache = Injection.provideCache(requireContext())
         binding.toProfile.setOnClickListener { view : View ->
+            info(SharedPreferences.token)
             view.findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
         binding.imageView2.setOnClickListener(){
+            info(SharedPreferences.token)
             recordVideo()
         }
 
@@ -114,6 +116,22 @@ class HomeFragment : Fragment() {
 //            video_view.setVideoURI(videoUri)
             //video_view.start()
             uploadVideo()
+        }
+    }
+
+    private fun info(token: String) {
+        GlobalScope.launch {
+            val response: Deferred<Int> = async (Dispatchers.IO) {homeViewModel.userInfo("userProfile", token)}
+            when (response.await()) {
+                200 -> {
+                    Log.i("INFO", "Podarilo sa")
+                }
+                401 -> {
+                    Log.i("INFO", "Nespravny token")
+                    view?.findNavController()?.navigate(R.id.loginFragment)
+                }
+            }
+
         }
     }
 

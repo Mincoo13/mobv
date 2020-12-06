@@ -30,6 +30,10 @@ class HomeViewModel(
         getVideos()
     }
 
+    suspend fun userInfo(action: String, token: String): Int {
+        return repository.userInfo(action, token)
+    }
+
     suspend fun uploadVideo(
         fileUri: File,
         token: String,

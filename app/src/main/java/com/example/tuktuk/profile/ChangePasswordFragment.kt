@@ -31,6 +31,10 @@ class ChangePasswordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        if (!SharedPreferences.isLogin) {
+            view?.findNavController()?.navigate(R.id.action_changePasswordFragment_to_loginFragment)
+        }
+
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_change_password, container, false
         )
@@ -42,7 +46,7 @@ class ChangePasswordFragment : Fragment() {
         cache = Injection.provideCache(requireContext())
         val animDrawable = binding.changePasswordLayout.background as AnimationDrawable
         animDrawable.setEnterFadeDuration(10)
-        animDrawable.setExitFadeDuration(5000)
+        animDrawable.setExitFadeDuration(2000)
         animDrawable.start()
 
         binding.passwordCheckButton.isEnabled = false
@@ -58,26 +62,48 @@ class ChangePasswordFragment : Fragment() {
         })
 
         binding.passwordCheckButton.setOnClickListener {
-            passwordChange(SharedPreferences.token, changePasswordViewModel.oldPassword.toString(), changePasswordViewModel.newPassword.toString())
+            info(SharedPreferences.token)
+            passwordChange(SharedPreferences.token, changePasswordViewModel.oldPassword.value!!, changePasswordViewModel.newPassword.value!!)
         }
 
         binding.toProfileButton.setOnClickListener@Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
+            info(SharedPreferences.token)
             view?.findNavController()?.navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }
     }
 
     private fun passwordChange(token: String, oldPassword: String, newPassword: String) {
         GlobalScope.launch {
+            val responseAuth: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
+
             val response: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.passwordChange("password", token, oldPassword, newPassword)}
             when (response.await()) {
                 200 -> {
                     Log.i("INFO", "Zmena hesla sa podarila")
+                    view?.findNavController()?.navigate(R.id.action_changePasswordFragment_to_profileFragment)
                 }
                 else -> {
+
                     Log.i("INFO", "Zmena hesla sa nepodarila")
                 }
             }
+        }
+    }
+
+    private fun info(token: String) {
+        GlobalScope.launch {
+            val response: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
+            when (response.await()) {
+                200 -> {
+                    Log.i("INFO", "Podarilo sa")
+                }
+                401 -> {
+                    Log.i("INFO", "Nespravny token")
+                    view?.findNavController()?.navigate(R.id.loginFragment)
+                }
+            }
+
         }
     }
 }

@@ -66,7 +66,7 @@ class RegistrationFragment : Fragment() {
       cache = Injection.provideCache(context!!)
       val animDrawable = binding.registrationLayout.background as AnimationDrawable
       animDrawable.setEnterFadeDuration(10)
-      animDrawable.setExitFadeDuration(5000)
+      animDrawable.setExitFadeDuration(2000)
       animDrawable.start()
 
       textview_date = binding.ageInput
