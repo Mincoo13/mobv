@@ -30,4 +30,3 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
     val adapter = recyclerView.adapter as VideoGridAdapter
     adapter.submitList(data)
 }
-
