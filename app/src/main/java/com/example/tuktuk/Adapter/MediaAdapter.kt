@@ -1,8 +1,10 @@
 package com.example.tuktuk.Adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tuktuk.MediaObject
@@ -11,11 +13,10 @@ import kotlinx.android.synthetic.main.media_object.view.*
 
 class MediaAdapter(private val mediaList: List<MediaObject>) :  RecyclerView.Adapter<MediaAdapter.MediaViewHolder>() {
 
-
-
     class MediaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val user_name: TextView = itemView.name
         val date: TextView = itemView.date
+        val shareBtn: ImageView = itemView.shareBtn
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -31,6 +32,9 @@ class MediaAdapter(private val mediaList: List<MediaObject>) :  RecyclerView.Ada
 
         holder.user_name.text = currentObject.user_name
         holder.date.text = currentObject.date
+        holder.shareBtn.setOnClickListener() {
+            Log.i("Info", "sharing is caring!")
+        }
 
     }
 
