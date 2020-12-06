@@ -43,11 +43,6 @@ class RegistrationFragment : Fragment() {
     var textview_date: TextView? = null
     @RequiresApi(Build.VERSION_CODES.N)
     var cal = Calendar.getInstance()!!
-    //helper global variable
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var registerContext: Context
-    }
 
   @SuppressLint("SetTextI18n", "UseRequireInsteadOfGet")
     override fun onCreateView(
