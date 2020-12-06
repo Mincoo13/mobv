@@ -36,6 +36,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_profile, container, false
         )

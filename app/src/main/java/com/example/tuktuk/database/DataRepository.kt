@@ -146,10 +146,12 @@ class DataRepository(
         newPassword: String): Int {
         try {
 //            var responseRefresh = tokenRefresh("refreshToken", SharedPreferences.refresh, "password")
-//            var responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, SharedPreferences.token))
+            var responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, SharedPreferences.token))
 //            Log.i("INFO", "ZMENA HESLA")
 //            Log.i("INFO", responseUser.body()!!.token)
-            val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword))
+            val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, responseUser.body()!!.token, oldPassword, newPassword))
+            Log.i("INFO", response.toString())
+            Log.i("INFO", PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword).toString())
 //            responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, token))
 //            Log.i("INFO", responseUser.body()!!.token)
 //            Log.i("INFO", SharedPreferences.token)
