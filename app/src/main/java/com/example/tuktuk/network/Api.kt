@@ -3,12 +3,11 @@ package com.example.tuktuk.network
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
+import com.example.tuktuk.network.responses.VideosResponse
 import com.example.tuktuk.util.AuthInterceptor
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -127,5 +126,14 @@ interface Api {
         @Part check: MultipartBody.Part,
         @Part videoFile: MultipartBody.Part
     ): Response<UserResponse>
+
+
+    @Headers(
+        "Accept: application/json",
+        "Cache-Control: no-cache",
+        "Content-Type: application/json"
+    )
+    @POST("service.php")
+    suspend fun getVideos(@Body body: AllVideosRequest): Response<List<VideosResponse>>
 
 }

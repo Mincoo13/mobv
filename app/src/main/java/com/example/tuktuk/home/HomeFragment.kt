@@ -14,10 +14,13 @@ import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tuktuk.Adapter.MediaAdapter
+import com.example.tuktuk.Adapter.VideoGridAdapter
 import com.example.tuktuk.MediaObject
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
@@ -43,6 +46,7 @@ class HomeFragment : Fragment() {
 
         binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater,
             R.layout.fragment_home,container,false)
+
         binding.lifecycleOwner = this
         homeViewModel = ViewModelProvider(this, Injection.provideHomeViewModelFactory(requireContext())).get(HomeViewModel::class.java)
         binding.homeViewModel = homeViewModel
@@ -56,17 +60,24 @@ class HomeFragment : Fragment() {
             recordVideo()
         }
 
+        val adapter = VideoGridAdapter()
+        binding.recyclerView.adapter = adapter
+
+        val manager = GridLayoutManager(activity, 1)
+        binding.recyclerView.layoutManager = manager
+        binding.recyclerView.setHasFixedSize(true)
+
+        binding.setLifecycleOwner(this)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+//        val adapter = MediaAdapter();
         val exampleList = generateDummyList(20)
-        recycler_view.adapter = MediaAdapter(exampleList)
-        recycler_view.layoutManager = LinearLayoutManager(this.requireContext())
-        recycler_view.setHasFixedSize(true)
+
 
     }
 

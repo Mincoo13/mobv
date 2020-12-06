@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.UserResponse
+import com.example.tuktuk.network.responses.VideosResponse
 import com.example.tuktuk.util.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -404,6 +405,15 @@ class DataRepository(
         Log.i("INFO", "Video sa nepodarilo nahrat")
         Log.i("INFO", response.code().toString())
         return response.code()
+    }
+
+    suspend fun getVideos(): List<VideosResponse>? {
+        val response = api.getVideos(AllVideosRequest("posts", Api.api_key, SharedPreferences.token))
+        if(response.isSuccessful) {
+            return response.body()
+        }
+
+        return ArrayList()
     }
 }
 
