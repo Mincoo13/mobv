@@ -1,9 +1,6 @@
 package com.example.tuktuk.profile
 
 import android.graphics.drawable.AnimationDrawable
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,19 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentProfileBinding
-import com.example.tuktuk.login.LoginViewModel
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.*
 import kotlinx.coroutines.*
 
 class ProfileFragment : Fragment() {
@@ -59,15 +52,14 @@ class ProfileFragment : Fragment() {
         binding.emailProfile.text = SharedPreferences.email
         binding.usernameProfile.text = SharedPreferences.username
 
-        Log.i("INFO", "ZAVOLALO SA ON CREATE")
-        var imageView: CircleImageView = binding.profileImage
-        Picasso.get()
-            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
-            .placeholder(R.drawable.blank_profile_picture_973460_640)
-            .error(R.drawable.blank_profile_picture_973460_640)
-            .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
-            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-            .into(imageView)
+        Log.i("INFO", "ZAVOLALO SA ON CREATE") //       var imageView: CircleImageView = binding.profileImage
+//         Picasso.get()
+//            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+//            .placeholder(R.drawable.blank_profile_picture_973460_640)
+//            .error(R.drawable.blank_profile_picture_973460_640)
+//            .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
+//            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+//            .into(imageView)
         return binding.root
     }
 

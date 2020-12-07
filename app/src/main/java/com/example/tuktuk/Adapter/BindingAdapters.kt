@@ -23,10 +23,22 @@ import android.widget.VideoView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.tuktuk.R
 import com.example.tuktuk.network.responses.VideosResponse
+import com.example.tuktuk.util.SharedPreferences
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
     val adapter = recyclerView.adapter as VideoGridAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("imageUrl")
+fun bindProfileImage(imgView: ImageView, imgUrl: String?) {
+        Glide.with(imgView.context)
+            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+            .placeholder(R.drawable.blank_profile_picture_973460_640)
+            .error(R.drawable.blank_profile_picture_973460_640)
+            .into(imgView)
 }
