@@ -130,7 +130,7 @@ class ProfileDialogFragment: DialogFragment() {
                 when (responseExists.await()) {
                     200 -> {
                         Log.i("INFO", "INVALIDATE")
-                        Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
+                        //Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                     }
                     409 -> {
                         Log.i("INFO", "Pouzivatel existuje.")
