@@ -17,9 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.SnapHelper
+import com.example.tuktuk.Adapter.PlayerViewAdapter
 import com.example.tuktuk.Adapter.VideoGridAdapter
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
@@ -35,9 +33,8 @@ class HomeFragment : Fragment() {
     private lateinit var cache: LocalCache
     lateinit var videoUri : Uri
     lateinit var videoFile : File
-    val REQUEST_VIDEO_CAPTURE=1
+    val REQUEST_VIDEO_CAPTURE = 1
     private var vAdapter: VideoGridAdapter? = null
-//    private lateinit var scrollListener: RecyclerViewScrollListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,15 +57,9 @@ class HomeFragment : Fragment() {
             recordVideo()
         }
 
-        val adapter = VideoGridAdapter()
-        binding.recyclerView.adapter = adapter
-
-        val manager = GridLayoutManager(activity, 1)
-        binding.recyclerView.layoutManager = manager
-        binding.recyclerView.setHasFixedSize(true)
+        setAdapter()
 
         binding.setLifecycleOwner(this)
-
         return binding.root
     }
 
@@ -137,32 +128,11 @@ class HomeFragment : Fragment() {
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = vAdapter
-
-
-
-//        val snapHelper: SnapHelper = LinearSnapHelper()
-//        snapHelper.attachToRecyclerView(recyclerView!!)
-
-//        scrollListener = object : RecyclerViewScrollListener() {
-//            override fun onItemIsFirstVisibleItem(index: Int) {
-//                Log.d("visible item index", index.toString())
-//                // play just visible item
-//                if (index != -1)
-//                    PlayerViewAdapter.playIndexThenPausePreviousPlayer(index)
-//            }
-//
-//        }
-//        recyclerView!!.addOnScrollListener(scrollListener)
-//        mAdapter!!.SetOnItemClickListener(object : TikTokRecyclerAdapter.OnItemClickListener {
-//            override fun onItemClick(view: View?, position: Int, model: MediaObject?) {
-//
-//            }
-//        })
     }
 
-//    override fun onPause() {
-//        super.onPause()
-//        PlayerViewAdapter.releaseAllPlayers()
-//    }
+    override fun onPause() {
+        super.onPause()
+        PlayerViewAdapter.releaseAllPlayers()
+    }
 
 }

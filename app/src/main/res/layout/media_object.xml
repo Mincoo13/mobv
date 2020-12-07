@@ -20,10 +20,16 @@
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            app:video_url="@{`http://api.mcomputing.eu/mobv/uploads/`+video.videourl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:surface_type="texture_view"
             app:item_index="@{index}"
-            android:layout_height="match_parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:resize_mode="fixed_height"
+            app:video_url="@{`http://api.mcomputing.eu/mobv/uploads/`+video.videourl}" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"

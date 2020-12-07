@@ -17,10 +17,6 @@
 
 package com.example.tuktuk.Adapter
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.VideoView
-import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tuktuk.network.responses.VideosResponse
@@ -30,12 +26,3 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
     val adapter = recyclerView.adapter as VideoGridAdapter
     adapter.submitList(data)
 }
-
-//@BindingAdapter("listData")
-//fun bindPlayView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
-//    val adapter = recyclerView.adapter as VideoGridAdapter
-//    adapter.submitList(data)
-//}
-//
-//
-//

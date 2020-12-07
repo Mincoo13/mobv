@@ -1,8 +1,6 @@
 package com.example.tuktuk.Adapter
 
-import android.content.Context
-import android.net.Uri
-import android.util.Log
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,31 +10,31 @@ import com.example.tuktuk.Adapter.VideoGridAdapter.VideoViewHolder
 import com.example.tuktuk.R
 import com.example.tuktuk.databinding.MediaObjectBinding
 import com.example.tuktuk.network.responses.VideosResponse
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCallback) {
 
-//    private var mPlayer: SimpleExoPlayer? = null
-//    private var playWhenReady = true
-//    private var currentWindow = 0
-//    private var playbackPosition: Long = 0
+    inner class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
 
-    class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
-        lateinit var videoURL: Uri
+        private fun getScreenHeight(): Int {
+            val px = Resources.getSystem().displayMetrics.heightPixels
+            return px
+        }
 
         fun bind(video: VideosResponse) {
-            Log.i("INFO", video.videourl)
 
-            videoURL = Uri.parse("http://api.mcomputing.eu/mobv/uploads/"+video.videourl)
+            var imageView: CircleImageView = binding.profileImage
+            Picasso.get()
+                .load("http://api.mcomputing.eu/mobv/uploads/" + video.profile)
+                .placeholder(R.drawable.blank_profile_picture_973460_640)
+                .error(R.drawable.blank_profile_picture_973460_640)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(imageView)
+
+            binding.videoView.layoutParams.height = getScreenHeight()
 
             binding.video = video
             binding.index = adapterPosition
@@ -51,7 +49,6 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video = getItem(position)
         holder.bind(video)
-        Log.i("INFO", "POSITION: $position")
     }
 
     override fun onViewRecycled(holder: VideoViewHolder) {
@@ -68,6 +65,4 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
             return oldItem.postid == newItem.postid
         }
     }
-
-
 }
