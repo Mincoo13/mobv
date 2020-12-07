@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentProfileDialogBinding
@@ -42,6 +43,11 @@ class ProfileDialogFragment: DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        if (!SharedPreferences.isLogin) {
+            view?.findNavController()?.navigate(R.id.action_profileFragment_to_loginFragment)
+        }
+
         getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.round_corner)
         var rootView: View = inflater.inflate(R.layout.fragment_profile_dialog, container, false)
 

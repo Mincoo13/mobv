@@ -147,9 +147,13 @@ class DataRepository(
         try {
 //            var responseRefresh = tokenRefresh("refreshToken", SharedPreferences.refresh, "password")
 //            var responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, SharedPreferences.token))
-//            Log.i("INFO", "ZMENA HESLA")
-//            Log.i("INFO", responseUser.body()!!.token)
-            val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword))
+            Log.i("INFO", "ZMENA HESLA stare")
+            Log.i("INFO", oldPassword)
+            Log.i("INFO", "ZMENA HESLA nove")
+            Log.i("INFO", newPassword)
+            val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, token, oldPassword, newPassword))
+            Log.i("INFO", response.toString())
+            Log.i("INFO", PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword).toString())
 //            responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, token))
 //            Log.i("INFO", responseUser.body()!!.token)
 //            Log.i("INFO", SharedPreferences.token)
@@ -164,11 +168,14 @@ class DataRepository(
 //                    cache.updateUser(gson.fromJson(response.body()!!))
                     Log.i("INFO", "ZMENA HESLA SA USPESNE PODARILA")
                     Log.i("INFO", response.body().toString())
+                    SharedPreferences.token = response.body()!!.token
+                    SharedPreferences.refresh = response.body()!!.refresh
+                    SharedPreferences.isLogin = true
                     response.code()
                 }
             }
             Log.i("INFO", "Stala sa velmi skareda vec")
-            return responseCode
+            return response.code()
         } catch (ex: Exception){
             Log.i("INFO", ex.toString())
             return 401
@@ -194,6 +201,7 @@ class DataRepository(
             SharedPreferences.profile = response.body()!!.token
             SharedPreferences.username = response.body()!!.username
             SharedPreferences.image = response.body()!!.profile
+            SharedPreferences.isLogin = true
 //            Log.i("INFO", response.body().toString())
 
             return response.code()
@@ -201,6 +209,13 @@ class DataRepository(
         else {
             Log.i("INFO", "USER INFO ZLY TOKEN")
             Log.i("INFO", response.code().toString())
+            SharedPreferences.token = ""
+            SharedPreferences.email = ""
+            SharedPreferences.refresh = ""
+            SharedPreferences.profile = ""
+            SharedPreferences.username = ""
+            SharedPreferences.image = ""
+            SharedPreferences.isLogin = false
             return response.code()
         }
 //        Log.i("INFO", "Nieco nepravdepoodbne")

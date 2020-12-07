@@ -19,9 +19,19 @@ class HomeViewModel(
     val videos: LiveData<List<VideosResponse>>
         get() = _videos
 
+//    private val _response = MutableLiveData<String>()
+//
+//    // The external immutable LiveData for the response String
+//    val response: LiveData<String>
+//        get() = _response
+
 
     init {
         getVideos()
+    }
+
+    suspend fun userInfo(action: String, token: String): Int {
+        return repository.userInfo(action, token)
     }
 
     suspend fun uploadVideo(
@@ -37,8 +47,11 @@ class HomeViewModel(
             try {
                 _videos.value = repository.getVideos()
                 Log.i("INFO", _videos.value.toString())
+//                val listResult = repository.getVideos()
+//                _response.value = "Success: ${listResult?.size} Mars properties retrieved"
             } catch (e: Exception) {
                 _videos.value = ArrayList()
+//                _response.value = "Failure: ${e.message}"
             }
         }
     }

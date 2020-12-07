@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<data>
+    <data>
         <variable
-            name="registration"
-            type="com.example.tuktuk.registration.RegistrationFragment" />
+            name="profileViewModel"
+            type="com.example.tuktuk.profile.ProfileViewModel" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".registration.RegistrationFragment"
-        android:id="@+id/registration_layout"
+        tools:context=".profile.ProfileFragment"
+        android:id="@+id/profile_layout"
         android:background="@drawable/gradient_animation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -126,7 +126,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/abc_vector_test" />

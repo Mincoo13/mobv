@@ -12,17 +12,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingVertical="10dp"
         >
 
-        <com.google.android.exoplayer2.ui.PlayerView
+        <VideoView
             android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/blank_profile_picture_973460_640"
@@ -33,9 +39,9 @@
             />
 
         <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:id="@+id/shareBtn"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/date"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +61,7 @@
             android:textSize="18sp"
             android:text="@{video.username}"
             app:layout_constraintBottom_toTopOf="@+id/date"
-            app:layout_constraintEnd_toStartOf="@+id/imageView5"
+            app:layout_constraintEnd_toStartOf="@+id/shareBtn"
             app:layout_constraintStart_toEndOf="@+id/profile_image" />
 
         <TextView
@@ -70,7 +76,7 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView5"
+            app:layout_constraintEnd_toStartOf="@+id/shareBtn"
             app:layout_constraintStart_toEndOf="@+id/profile_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

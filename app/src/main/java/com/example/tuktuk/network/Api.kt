@@ -85,7 +85,7 @@ interface Api {
         "Content-Type: application/json"
     )
     @POST("service.php")
-    suspend fun passwordChange(@Body body: PasswordChangeRequest): Response<Any>
+    suspend fun passwordChange(@Body body: PasswordChangeRequest): Response<UserResponse>
 
     @Headers(
         "Accept: application/json",

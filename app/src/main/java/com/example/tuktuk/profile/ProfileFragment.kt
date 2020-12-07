@@ -1,5 +1,6 @@
 package com.example.tuktuk.profile
 
+import android.graphics.drawable.AnimationDrawable
 import android.icu.number.NumberFormatter.with
 import android.icu.number.NumberRangeFormatter.with
 import android.net.Uri
@@ -42,6 +43,13 @@ class ProfileFragment : Fragment() {
         binding.lifecycleOwner = this
         profileViewModel = ViewModelProvider(this, Injection.provideProfileViewModelFactory(requireContext()))
             .get(ProfileViewModel::class.java)
+        binding.profileViewModel = profileViewModel
+
+        cache = Injection.provideCache(requireContext())
+        val animDrawable = binding.profileLayout.background as AnimationDrawable
+        animDrawable.setEnterFadeDuration(10)
+        animDrawable.setExitFadeDuration(2000)
+        animDrawable.start()
 
         info(SharedPreferences.token)
 
@@ -97,6 +105,7 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         Log.i("INFO", "ZAVOLALO SA RESUME")
         info(SharedPreferences.token)
         val imageView: CircleImageView = binding.profileImage
@@ -129,8 +138,7 @@ class ProfileFragment : Fragment() {
                 }
                 401 -> {
                     Log.i("INFO", "Nespravny token")
-                    SharedPreferences.isLogin = false
-                    view?.findNavController()?.navigate(R.id.action_profileFragment_to_loginFragment)
+                    view?.findNavController()?.navigate(R.id.loginFragment)
                 }
             }
 
