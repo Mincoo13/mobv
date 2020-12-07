@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.tuktuk.Adapter.PlayerViewAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tuktuk.Adapter.MediaAdapter
 import com.example.tuktuk.Adapter.VideoGridAdapter
@@ -37,7 +38,8 @@ class HomeFragment : Fragment() {
     private lateinit var cache: LocalCache
     lateinit var videoUri : Uri
     lateinit var videoFile : File
-    val REQUEST_VIDEO_CAPTURE=1
+    val REQUEST_VIDEO_CAPTURE = 1
+    private var vAdapter: VideoGridAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,34 +64,10 @@ class HomeFragment : Fragment() {
             recordVideo()
         }
 
-        val adapter = VideoGridAdapter()
-        binding.recyclerView.adapter = adapter
-
-        val manager = GridLayoutManager(activity, 1)
-        binding.recyclerView.layoutManager = manager
-        binding.recyclerView.setHasFixedSize(true)
+        setAdapter()
 
         binding.setLifecycleOwner(this)
-
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-//        val adapter = MediaAdapter();
-        val exampleList = generateDummyList(20)
-
-
-    }
-
-    private fun generateDummyList(size: Int): List<MediaObject> {
-        val list = ArrayList<MediaObject>()
-        for (i in 0 until size) {
-            val item = MediaObject("Item $i", "Line 2")
-            list += item
-        }
-        return list
     }
 
     /*VIDEO*/
@@ -112,9 +90,6 @@ class HomeFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if(requestCode==REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK){
-
-//            video_view.setVideoURI(videoUri)
-            //video_view.start()
             uploadVideo()
         }
     }
@@ -166,6 +141,21 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+
+    private fun setAdapter() {
+        vAdapter = VideoGridAdapter()
+
+        val manager = GridLayoutManager(activity, 1)
+        binding.recyclerView.layoutManager = manager
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = vAdapter
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PlayerViewAdapter.releaseAllPlayers()
     }
 
 }

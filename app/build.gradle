@@ -116,6 +116,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+
 //    ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.12.0'
 }

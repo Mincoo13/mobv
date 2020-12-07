@@ -1,7 +1,6 @@
 package com.example.tuktuk.home
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.tuktuk.database.*

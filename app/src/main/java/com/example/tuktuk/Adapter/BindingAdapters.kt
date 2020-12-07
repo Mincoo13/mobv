@@ -17,10 +17,7 @@
 
 package com.example.tuktuk.Adapter
 
-import android.view.View
 import android.widget.ImageView
-import android.widget.VideoView
-import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

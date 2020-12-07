@@ -17,6 +17,7 @@
     <string name="emailNotValid">E-mail nema spravny tvar</string>
     <string name="usernameIsUsed">Používateľské meno je už použité</string>
     <string name="emptyString"></string>
+    <string name="url">http://api.mcomputing.eu/mobv/uploads/</string>
     <string name="removePhoto">Odstrániť fotografiu</string>
     <string name="addPhotoFromGallery">Pridať fotografiu z galérie</string>
     <string name="getPhoto">Pridať fotografiu pomocou fotoaparáta</string>
