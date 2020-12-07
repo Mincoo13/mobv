@@ -15,7 +15,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "1.8"
     }
 
     defaultConfig {
@@ -26,6 +26,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -112,5 +116,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
-
+//    ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.6'
 }
