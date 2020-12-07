@@ -13,15 +13,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tuktuk.R
 import com.example.tuktuk.databinding.MediaObjectBinding
 import com.example.tuktuk.network.responses.VideosResponse
+import com.google.android.exoplayer2.SimpleExoPlayer
 import kotlinx.android.synthetic.main.media_object.view.*
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCallback) {
+class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
 
     inner class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -29,7 +31,7 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
             val px = Resources.getSystem().displayMetrics.heightPixels
             return px
         }
-        val shareBtn: ImageView = itemView.shareBtn
+        val shareBtn: ImageView = binding.shareBtn
         fun bind(video: VideosResponse) {
 
             var imageView: CircleImageView = binding.profileImage
@@ -46,41 +48,6 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
             binding.index = adapterPosition
             binding.executePendingBindings()
         }
-
-        fun initPlayer(holder: VideoViewHolder, position: Int){
-            Log.i("INFO", "POSITION: $position")
-            if(position == 1) {
-                player = SimpleExoPlayer.Builder(binding.root.context).build()
-
-                player.playWhenReady = false
-                player.repeatMode = Player.REPEAT_MODE_ALL
-                player.prepare(buildMediaSource(), false, false)
-//
-                binding.videoView.useController = false
-                binding.videoView.player = player
-            }
-
-        }
-
-
-        fun buildMediaSource():ExtractorMediaSource  {
-//            val userAgent = Util.getUserAgent(binding.videoView.context, binding.videoView.context.getString(
-//                R.string.app_name))
-
-//            val dataSourceFactory = DefaultHttpDataSourceFactory(userAgent)
-//            val mediaSource =  ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(videoURL)
-//            val mediaSource =  HlsMediaSource.Factory(dataSourceFactory).createMediaSource(videoURL)
-
-            val userAgent = Util.getUserAgent(binding.videoView.context, "ExoPlayer")
-            val mediaSource = ExtractorMediaSource(videoURL, DefaultDataSourceFactory(binding.videoView.context, userAgent), DefaultExtractorsFactory(), null, null)
-            return mediaSource
-
-        }
-
-        fun releasePlayer(position: Int) {
-            if (position != null)
-                player.release()
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
@@ -92,8 +59,7 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
         holder.bind(video)
         holder.shareBtn.setOnClickListener() {
             val context = holder.itemView.context
-            val urlVideo =
-                "Kukaj na toto super video cislo " + position.toString() + " zo skvelej aplikacie TukTuk!"
+            val urlVideo = "Ťukaj na toto super video http://api.mcomputing.eu/mobv/uploads/" + video.videourl + " zo skvelej aplikacie ŤukŤuk!"
             context?.startActivity(shareVideo(urlVideo))
         }
     }

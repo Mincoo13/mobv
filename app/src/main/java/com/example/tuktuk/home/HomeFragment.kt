@@ -14,21 +14,16 @@ import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.tuktuk.Adapter.PlayerViewAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tuktuk.Adapter.MediaAdapter
 import com.example.tuktuk.Adapter.VideoGridAdapter
-import com.example.tuktuk.MediaObject
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 import com.example.tuktuk.databinding.FragmentHomeBinding
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import java.io.File
 
