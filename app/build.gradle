@@ -25,6 +25,7 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
@@ -33,6 +34,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -113,5 +117,5 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
 //    ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.11.6'
+    implementation 'com.google.android.exoplayer:exoplayer:2.12.0'
 }

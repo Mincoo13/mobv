@@ -7,6 +7,10 @@
         <variable
             name="video"
             type="com.example.tuktuk.network.responses.VideosResponse" />
+
+        <variable
+            name="index"
+            type="int"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +21,8 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/videoView"
             android:layout_width="match_parent"
+            app:video_url="@{`http://api.mcomputing.eu/mobv/uploads/`+video.videourl}"
+            app:item_index="@{index}"
             android:layout_height="match_parent"/>
 
         <de.hdodenhof.circleimageview.CircleImageView

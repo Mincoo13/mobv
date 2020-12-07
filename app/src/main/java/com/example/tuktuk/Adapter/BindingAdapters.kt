@@ -31,3 +31,11 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
     adapter.submitList(data)
 }
 
+//@BindingAdapter("listData")
+//fun bindPlayView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
+//    val adapter = recyclerView.adapter as VideoGridAdapter
+//    adapter.submitList(data)
+//}
+//
+//
+//

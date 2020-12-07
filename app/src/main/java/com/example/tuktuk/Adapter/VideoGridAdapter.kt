@@ -15,7 +15,6 @@ import com.example.tuktuk.network.responses.VideosResponse
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -33,53 +32,15 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
 
     class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
         lateinit var videoURL: Uri
-        lateinit var player: SimpleExoPlayer
 
         fun bind(video: VideosResponse) {
-            Log.i("INFO", "VideoViewHolder bind")
-            Log.i("INFO", Uri.parse("http://api.mcomputing.eu/mobv/uploads/"+video.videourl).toString())
             Log.i("INFO", video.videourl)
-
 
             videoURL = Uri.parse("http://api.mcomputing.eu/mobv/uploads/"+video.videourl)
 
             binding.video = video
+            binding.index = adapterPosition
             binding.executePendingBindings()
-        }
-
-        fun initPlayer(holder: VideoViewHolder, position: Int){
-            Log.i("INFO", "POSITION: $position")
-            if(position == 1) {
-                player = SimpleExoPlayer.Builder(binding.root.context).build()
-
-                player.playWhenReady = false
-                player.repeatMode = Player.REPEAT_MODE_ALL
-                player.prepare(buildMediaSource(), false, false)
-//
-                binding.videoView.useController = false
-                binding.videoView.player = player
-            }
-
-        }
-
-
-        fun buildMediaSource():ExtractorMediaSource  {
-//            val userAgent = Util.getUserAgent(binding.videoView.context, binding.videoView.context.getString(
-//                R.string.app_name))
-
-//            val dataSourceFactory = DefaultHttpDataSourceFactory(userAgent)
-//            val mediaSource =  ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(videoURL)
-//            val mediaSource =  HlsMediaSource.Factory(dataSourceFactory).createMediaSource(videoURL)
-
-            val userAgent = Util.getUserAgent(binding.videoView.context, "ExoPlayer")
-            val mediaSource = ExtractorMediaSource(videoURL, DefaultDataSourceFactory(binding.videoView.context, userAgent), DefaultExtractorsFactory(), null, null)
-            return mediaSource
-
-        }
-
-        fun releasePlayer(position: Int) {
-            if (position != null)
-                player.release()
         }
     }
 
@@ -90,14 +51,11 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoViewHolder>(DiffCall
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video = getItem(position)
         holder.bind(video)
-        Log.i("INFO", "onBindViewHolder")
-        holder.initPlayer(holder, position)
         Log.i("INFO", "POSITION: $position")
-        Log.i("INFO", "initPlayer")
     }
 
     override fun onViewRecycled(holder: VideoViewHolder) {
-        holder.releasePlayer(holder.adapterPosition)
+        PlayerViewAdapter.releaseRecycledPlayers(holder.adapterPosition)
         super.onViewRecycled(holder)
     }
 
