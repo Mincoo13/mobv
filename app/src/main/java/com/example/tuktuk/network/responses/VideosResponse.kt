@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 data class VideosResponse (
-        val postid: String,
+        val postid: Int,
         val created: String,
 //        val videourl: String,
         val username: String,

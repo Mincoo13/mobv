@@ -1,5 +1,6 @@
 package com.example.tuktuk.network
 
+import androidx.lifecycle.MutableLiveData
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.ExistsResponse
 import com.example.tuktuk.network.responses.UserResponse
@@ -119,6 +120,11 @@ interface Api {
     )
     @POST("service.php")
     suspend fun removeImage(@Body body: RemoveImageRequest): Response<Any>
+
+
+    @POST("service.php")
+    suspend fun removeVideo(@Body body: RemoveVideoRequest): Response<Any>
+
 
     @Multipart
     @POST("post.php")

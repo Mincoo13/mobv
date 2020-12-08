@@ -3,6 +3,7 @@ package com.example.tuktuk.database
 import android.content.Context
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
 import com.example.tuktuk.network.Api
 import com.example.tuktuk.network.request.*
 import com.example.tuktuk.network.responses.UserResponse
@@ -418,14 +419,47 @@ class DataRepository(
         }
 
         Log.i("INFO", "Video sa nepodarilo nahrat")
-        Log.i("INFO", response.code().toString())
         return response.code()
+    }
+
+    suspend fun removeVideo(
+        video_id: Int): Int {
+        try {
+            Log.i("INFO", "### VYMAZAVANIE ##")
+            Log.i("INFO", video_id.toString())
+            val response = api.removeVideo(RemoveVideoRequest("deletePost", Api.api_key, SharedPreferences.token, video_id))
+            Log.i("INFO", response.toString())
+            Log.i("INFO", response.body().toString())
+            if(response.isSuccessful) {
+                when (response.code()) {
+                    200 -> {
+                        Log.i("INFO", "Video uspesne zmazane")
+                        return response.code()
+                    }
+                    else -> {
+                        Log.i("INFO", "Nepodarilo sa zmazat video")
+                        Log.i("INFO", response.code().toString())
+                        return response.code()
+                    }
+                }
+            }
+            Log.i("INFO", "Nastala chyba.")
+            return responseCode
+        } catch (ex: Exception){
+            Log.i("INFO", ex.toString())
+            return responseCode
+        }
+
     }
 
     suspend fun getVideos(): List<VideosResponse>? {
         val response = api.getVideos(AllVideosRequest("posts", Api.api_key, SharedPreferences.token))
         if(response.isSuccessful) {
-            return response.body()
+            val videos = response.body()
+            videos?.dropWhile {
+                (it.username == "newuser111" || it.username == "newuser222")
+            }
+            return videos
         }
 
         return ArrayList()

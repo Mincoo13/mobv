@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.tuktuk.database.*
 import com.example.tuktuk.network.responses.VideosResponse
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -20,10 +21,16 @@ class HomeViewModel(
 
 //    private val _response = MutableLiveData<String>()
 //
-//    // The external immutable LiveData for the response String
-//    val response: LiveData<String>
-//        get() = _response
+//    val videos: LiveData<List<VideosResponse>>
+//        get() = _videos
 
+//    val videos= getAllVideos()
+//
+//    val emailResponse: MutableLiveData<List<VideosResponse>> = Transformations.map()
+
+//    val videos: LiveData<List<VideosResponse>> = Transformations.map(repositoryVideos) {
+//        repositoryVideos.value
+//    }
 
     init {
         getVideos()
@@ -46,12 +53,38 @@ class HomeViewModel(
             try {
                 _videos.value = repository.getVideos()
                 Log.i("INFO", _videos.value.toString())
-//                val listResult = repository.getVideos()
-//                _response.value = "Success: ${listResult?.size} Mars properties retrieved"
+                Log.i("INFO", "---- getVideos POCET VIDEI:  "+ _videos.value?.size.toString())
             } catch (e: Exception) {
                 _videos.value = ArrayList()
-//                _response.value = "Failure: ${e.message}"
             }
         }
     }
+
+    private fun removeVideo(videoID: Int): Int {
+        var responseCode: Int = 0
+        GlobalScope.launch {
+            try {
+                responseCode = repository.removeVideo(videoID)
+            } catch (e: Exception) {
+                responseCode = 500
+            }
+        }
+        return responseCode
+    }
+//
+//    private fun getAllVideos(): MutableLiveData<List<VideosResponse>> {
+//        var videos: MutableLiveData<List<VideosResponse>> = MutableLiveData<List<VideosResponse>>()
+//        viewModelScope.launch {
+//            videos = repository.getVideos()!!
+//        }
+//        return videos
+//    }
+
+//    private fun getAllVideos(): MutableLiveData<List<VideosResponse>> {
+//        var videos: MutableLiveData<List<VideosResponse>> = MutableLiveData<List<VideosResponse>>()
+//        viewModelScope.launch {
+//            videos = repository.getVideos()!!
+//        }
+//        return videos
+//    }
 }

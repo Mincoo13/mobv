@@ -121,11 +121,6 @@ class RegistrationFragment : Fragment() {
             when (responseExists.await()) {
                 200 -> {
                     val responseRegister: Deferred<Int> = async(Dispatchers.IO) {
-                        Log.i("INFO", "######")
-                        Log.i("INFO", "REGISTER FORM")
-                        Log.i("INFO", registrationViewModel.name.value!!)
-                        Log.i("INFO", registrationViewModel.email.value!!)
-                        Log.i("INFO", registrationViewModel.password.value!!)
                         registrationViewModel.api(
                             "register",
                             registrationViewModel.name.value!!,

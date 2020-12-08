@@ -2,6 +2,7 @@ package com.example.tuktuk.Adapter
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -35,6 +36,7 @@ class PlayerViewAdapter {
         @JvmStatic
         @BindingAdapter(value = ["video_url", "item_index"], requireAll = false)
         fun PlayerView.loadVideo(url: String, item_index: Int? = null) {
+
             val player = SimpleExoPlayer.Builder(context).build()
 
             player.playWhenReady = true
@@ -46,7 +48,6 @@ class PlayerViewAdapter {
 
             player.prepare(mediaSource)
             this.player = player
-
             if (playersMap.containsKey(item_index))
                 playersMap.remove(item_index)
             if (item_index != null)

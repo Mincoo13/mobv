@@ -29,7 +29,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:resize_mode="fixed_height"
-            app:video_url="@{`http://api.mcomputing.eu/mobv/uploads/`+video.videourl}" />
+            app:video_url="@{`http://api.mcomputing.eu/mobv/uploads/`+video.videourl}" >
+        </com.google.android.exoplayer2.ui.PlayerView>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
@@ -43,6 +44,17 @@
             app:layout_constraintStart_toStartOf="parent"
 
             />
+
+
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/shareBtn"
+            app:layout_constraintTop_toTopOf="@+id/name"
+            app:layout_constraintBottom_toBottomOf="@+id/date"
+            app:srcCompat="@drawable/trash" />
 
         <ImageView
             android:id="@+id/shareBtn"
@@ -67,7 +79,7 @@
             android:textSize="18sp"
             android:text="@{video.username}"
             app:layout_constraintBottom_toTopOf="@+id/date"
-            app:layout_constraintEnd_toStartOf="@+id/shareBtn"
+            app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
             app:layout_constraintStart_toEndOf="@+id/profile_image" />
 
         <TextView
@@ -82,7 +94,7 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/shareBtn"
+            app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
             app:layout_constraintStart_toEndOf="@+id/profile_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

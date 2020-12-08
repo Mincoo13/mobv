@@ -10,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tuktuk.R
+import com.example.tuktuk.database.DataRepository
 import com.example.tuktuk.databinding.MediaObjectBinding
 import com.example.tuktuk.network.responses.VideosResponse
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -21,9 +23,12 @@ import kotlinx.android.synthetic.main.media_object.view.*
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 
 
-class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
+class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
 
     inner class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -32,6 +37,8 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoVie
             return px
         }
         val shareBtn: ImageView = binding.shareBtn
+        val deleteBtn: ImageView = binding.deleteBtn
+
         fun bind(video: VideosResponse) {
 
             var imageView: CircleImageView = binding.profileImage
@@ -43,7 +50,6 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoVie
                 .into(imageView)
 
             binding.videoView.layoutParams.height = getScreenHeight()
-
             binding.video = video
             binding.index = adapterPosition
             binding.executePendingBindings()
@@ -61,6 +67,11 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoVie
             val context = holder.itemView.context
             val urlVideo = "Ťukaj na toto super video http://api.mcomputing.eu/mobv/uploads/" + video.videourl + " zo skvelej aplikacie ŤukŤuk!"
             context?.startActivity(shareVideo(urlVideo))
+        }
+
+        holder.deleteBtn.setOnClickListener() {
+            val response = removeVideo(video.postid)
+            Log.i("INFO", "REMOVE -- $response")
         }
     }
 
@@ -85,5 +96,26 @@ class VideoGridAdapter() : ListAdapter<VideosResponse, VideoGridAdapter.VideoVie
             putExtra(Intent.EXTRA_TEXT, urlVideo)
             type = "text/plain"
         }
+    }
+
+
+    private fun removeVideo(videoID: Int): Int {
+        var responseCode: Int = 0
+        GlobalScope.launch {
+            try {
+                responseCode = repository.removeVideo(videoID)
+            } catch (e: Exception) {
+                responseCode = 500
+            }
+        }
+        return responseCode
+    }
+
+    private fun getVideos(): List<VideosResponse> {
+        var videos: List<VideosResponse> = ArrayList()
+        GlobalScope.launch {
+            videos = repository.getVideos()!!
+        }
+        return videos
     }
 }

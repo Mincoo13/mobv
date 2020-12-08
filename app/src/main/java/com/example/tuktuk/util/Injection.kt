@@ -19,7 +19,7 @@ object Injection {
     }
 
     // Create repository with database cache and api
-    private fun provideDataRepository(context: Context): DataRepository {
+    fun provideDataRepository(context: Context): DataRepository {
         return DataRepository.getInstance(provideCache(context), Api.create())
     }
 

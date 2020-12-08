@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
 
     private fun createVideoFile(): File {
         val fileName="MyVideo"
-        val storageDir=getActivity()?.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+        val storageDir= getActivity()?.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
         return File.createTempFile(
             fileName,
             ".mp4",
@@ -123,7 +123,6 @@ class HomeFragment : Fragment() {
             when (responseExists.await()) {
                 200 -> {
                     Log.i("INFO", "Video bolo uploadnute.")
-//                    Picasso.get().invalidate("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
                 }
                 409 -> {
                     Log.i("INFO", "Pouzivatel existuje.")
@@ -140,7 +139,7 @@ class HomeFragment : Fragment() {
 
 
     private fun setAdapter() {
-        vAdapter = VideoGridAdapter()
+        vAdapter = VideoGridAdapter(repository = Injection.provideDataRepository(requireContext()))
 
         val manager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = manager
