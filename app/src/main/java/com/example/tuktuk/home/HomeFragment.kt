@@ -3,6 +3,7 @@ package com.example.tuktuk.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -67,7 +68,7 @@ class HomeFragment : Fragment() {
 
     /*VIDEO*/
     private fun recordVideo(){
-        videoFile =createVideoFile()
+        videoFile = createVideoFile()
         Log.i("Info", this.requireContext().toString())
         if(videoFile !=null){
             videoUri= FileProvider.getUriForFile(
@@ -76,6 +77,9 @@ class HomeFragment : Fragment() {
                 videoFile
             )
             val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+            intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10)
+            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 8388608L)
+            intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             intent.putExtra(MediaStore.EXTRA_OUTPUT,videoUri)
 
             startActivityForResult(intent,REQUEST_VIDEO_CAPTURE)
@@ -108,10 +112,11 @@ class HomeFragment : Fragment() {
     private fun createVideoFile(): File {
         val fileName="MyVideo"
         val storageDir= getActivity()?.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
-        return File.createTempFile(
+        val file = File.createTempFile(
             fileName,
             ".mp4",
             storageDir)
+        return file
 
     }
 
