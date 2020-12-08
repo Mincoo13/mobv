@@ -51,7 +51,6 @@ class DataRepository(
             val response = api.userRegister(UserRequest(action, Api.api_key, username, email, password))
             if (response.isSuccessful) {
                 response.body()?.let {
-                    Log.i("INFO", "INSERT TO DATABASE")
                     cache.insertUser(gson.fromJson(response.body()!!))
                     Log.i("INFO", "# USER")
                     Log.i("INFO", cache.getUser(response.body()!!.id).toString())
@@ -73,24 +72,20 @@ class DataRepository(
         username: String): Int {
         try {
             val response = api.userExists(UserExistsRequest(action, Api.api_key, username))
-
-            Log.i("INFO", response.body()!!.exists.toString())
+            Log.i("INFO", "eserExist")
+            Log.i("INFO", response.body().toString())
+            Log.i("INFO", response.toString())
+            Log.i("INFO", response.code().toString())
             if (response.isSuccessful) {
                 if (response.body()!!.exists) {
-                    Log.i("INFO", "Pouzivatel existuje")
                     return 409
                 }
                 else {
-                    Log.i("INFO", "Pouzivatel neexistuje")
                     return response.code()
                 }
             }
             return responseCode
-//            if (response.isSuccessful) {
-//
-//            }
         } catch (ex:  ConnectException){
-            Log.i("ERROR", "Problem.")
             ex.printStackTrace()
         }
         return responseCode

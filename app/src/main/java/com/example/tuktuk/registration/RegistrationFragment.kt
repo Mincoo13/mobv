@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -21,6 +22,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.example.tuktuk.Adapter.PlayerViewAdapter.Companion.loadVideo
+import com.example.tuktuk.Adapter.toast
 import com.example.tuktuk.R
 import com.example.tuktuk.database.LocalCache
 
@@ -130,19 +133,22 @@ class RegistrationFragment : Fragment() {
                     }
                     val codeRegister = responseRegister.await()
                     if (codeRegister == 200) {
-                        Log.i("INFO", "######")
                         view?.findNavController()?.navigate(R.id.loginFragment)
                     } else {
+                        binding.messageRegister.text = "Pouzivatel s tymto menom uz existuje."
                         Log.i("INFO", "code err register")
                     }
                 }
                 409 -> {
+                    binding.messageRegister.text = "Pouzivatel s tymto menom uz existuj."
                     Log.i("INFO", "Pouzivatel existuje.")
                 }
                 500 -> {
+                    binding.messageRegister.text = "Nastala neocakavana chyba."
                     Log.i("INFO", "Nastala neocakavana chyba.")
                 }
                 else -> {
+                    binding.messageRegister.text = "Nastala neocakavana chyba."
                     Log.i("INFO", "Nastala naozaj neocakavana chyba.")
                 }
             }

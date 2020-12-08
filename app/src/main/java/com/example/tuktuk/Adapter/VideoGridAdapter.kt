@@ -1,35 +1,29 @@
 package com.example.tuktuk.Adapter
 
 
-import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tuktuk.R
 import com.example.tuktuk.database.DataRepository
 import com.example.tuktuk.databinding.MediaObjectBinding
+import com.example.tuktuk.home.HomeViewModel
 import com.example.tuktuk.network.responses.VideosResponse
 import com.example.tuktuk.util.SharedPreferences
-import com.google.android.exoplayer2.SimpleExoPlayer
-import kotlinx.android.synthetic.main.media_object.view.*
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.File
+import kotlinx.coroutines.*
 
 
-class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
+class VideoGridAdapter(private val repository: DataRepository, private val homeViewModel: HomeViewModel) : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
 
     inner class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -42,7 +36,7 @@ class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<Vid
 
         fun bind(video: VideosResponse) {
 
-            if (SharedPreferences.image != video.profile) {
+            if (SharedPreferences.username != video.username) {
                 binding.deleteBtn.visibility = View.INVISIBLE
             }
 
@@ -75,8 +69,7 @@ class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<Vid
         }
 
         holder.deleteBtn.setOnClickListener() {
-            val response = removeVideo(video.postid)
-            Log.i("INFO", "REMOVE -- $response")
+            removeVideo(video.postid)
         }
     }
 
@@ -104,23 +97,22 @@ class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<Vid
     }
 
 
-    private fun removeVideo(videoID: Int): Int {
-        var responseCode: Int = 0
+    private fun removeVideo(videoID: Int) {
         GlobalScope.launch {
-            try {
-                responseCode = repository.removeVideo(videoID)
-            } catch (e: Exception) {
-                responseCode = 500
+            val responseCode: Deferred<Int> = async(Dispatchers.IO) {repository.removeVideo(videoID)}
+            when (responseCode.await()) {
+                200 -> {
+                    Log.i("INFO", "Video bolo vymazane.")
+                    updateVideos()
+                }
+                else -> {
+                    Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                }
             }
         }
-        return responseCode
     }
 
-    private fun getVideos(): List<VideosResponse> {
-        var videos: List<VideosResponse> = ArrayList()
-        GlobalScope.launch {
-            videos = repository.getVideos()!!
-        }
-        return videos
+    private fun updateVideos() {
+        homeViewModel.refreshVideos(this)
     }
 }

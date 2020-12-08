@@ -2,10 +2,17 @@ package com.example.tuktuk.home
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.*
-import com.example.tuktuk.database.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tuktuk.Adapter.VideoGridAdapter
+import com.example.tuktuk.database.DataRepository
+import com.example.tuktuk.database.User
 import com.example.tuktuk.network.responses.VideosResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -24,14 +31,24 @@ class HomeViewModel(
 //    val videos: LiveData<List<VideosResponse>>
 //        get() = _videos
 
-//    val videos= getAllVideos()
-//
-//    val emailResponse: MutableLiveData<List<VideosResponse>> = Transformations.map()
-
-//    val videos: LiveData<List<VideosResponse>> = Transformations.map(repositoryVideos) {
-//        repositoryVideos.value
+////    var videos = getUsers()
+//    fun getUsers(): LiveData<List<VideosResponse>>? {
+//        _videos.postValue(loadUsers())
+//        Log.i("INFO", "videos")
+//        Log.i("INFO", _videos.value.toString())
+//        return _videos
 //    }
 
+//    val videos: LiveData<List<VideosResponse>>
+//        get() = _videos
+
+    private fun loadUsers(): List<VideosResponse> {
+        var videos: List<VideosResponse> = ArrayList()
+        viewModelScope.launch {
+            videos = repository.getVideos()!!
+        }
+        return videos
+    }
     init {
         getVideos()
     }
@@ -47,44 +64,28 @@ class HomeViewModel(
     ): Int {
         return repository.uploadVideo(fileUri, token, context)
     }
+//
+    fun getVideos() {
+        viewModelScope.launch {
+            async (Dispatchers.IO) {
+                try {
+                    _videos.postValue(repository.getVideos())
+                } catch (e: Exception) {
+                    _videos.value = ArrayList()
+                }
+            }
+        }
+    }
 
-    private fun getVideos() {
+    fun refreshVideos(adapter: VideoGridAdapter) {
         viewModelScope.launch {
             try {
-                _videos.value = repository.getVideos()
-                Log.i("INFO", _videos.value.toString())
-                Log.i("INFO", "---- getVideos POCET VIDEI:  "+ _videos.value?.size.toString())
+                _videos.postValue(repository.getVideos())
+                adapter.submitList(_videos.value)
+                adapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 _videos.value = ArrayList()
             }
         }
     }
-
-    private fun removeVideo(videoID: Int): Int {
-        var responseCode: Int = 0
-        GlobalScope.launch {
-            try {
-                responseCode = repository.removeVideo(videoID)
-            } catch (e: Exception) {
-                responseCode = 500
-            }
-        }
-        return responseCode
-    }
-//
-//    private fun getAllVideos(): MutableLiveData<List<VideosResponse>> {
-//        var videos: MutableLiveData<List<VideosResponse>> = MutableLiveData<List<VideosResponse>>()
-//        viewModelScope.launch {
-//            videos = repository.getVideos()!!
-//        }
-//        return videos
-//    }
-
-//    private fun getAllVideos(): MutableLiveData<List<VideosResponse>> {
-//        var videos: MutableLiveData<List<VideosResponse>> = MutableLiveData<List<VideosResponse>>()
-//        viewModelScope.launch {
-//            videos = repository.getVideos()!!
-//        }
-//        return videos
-//    }
 }

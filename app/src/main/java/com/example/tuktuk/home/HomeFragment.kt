@@ -123,6 +123,7 @@ class HomeFragment : Fragment() {
             when (responseExists.await()) {
                 200 -> {
                     Log.i("INFO", "Video bolo uploadnute.")
+                    updateVideos()
                 }
                 409 -> {
                     Log.i("INFO", "Pouzivatel existuje.")
@@ -137,9 +138,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun updateVideos() {
+        vAdapter?.let { homeViewModel.refreshVideos(it) }
+    }
+
+
 
     private fun setAdapter() {
-        vAdapter = VideoGridAdapter(repository = Injection.provideDataRepository(requireContext()))
+        vAdapter = VideoGridAdapter(repository = Injection.provideDataRepository(requireContext()), homeViewModel = homeViewModel)
 
         val manager = GridLayoutManager(activity, 1)
         binding.recyclerView.layoutManager = manager

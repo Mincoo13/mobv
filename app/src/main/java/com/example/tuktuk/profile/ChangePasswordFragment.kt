@@ -63,13 +63,12 @@ class ChangePasswordFragment : Fragment() {
         })
 
         binding.passwordCheckButton.setOnClickListener {
-//            info(SharedPreferences.token)
-            passwordChange(SharedPreferences.token, changePasswordViewModel.oldPassword.value!!, changePasswordViewModel.newPassword.value!!)
+            info(SharedPreferences.token, true)
         }
 
         binding.toProfileButton.setOnClickListener@Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
-//            info(SharedPreferences.token)
+            info(SharedPreferences.token)
             view?.findNavController()?.navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }
     }
@@ -92,12 +91,15 @@ class ChangePasswordFragment : Fragment() {
         }
     }
 
-    private fun info(token: String) {
+    private fun info(token: String, passwordChange: Boolean = false) {
         GlobalScope.launch {
             val response: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
             when (response.await()) {
                 200 -> {
                     Log.i("INFO", "Podarilo sa")
+                    if (passwordChange) {
+                        passwordChange(SharedPreferences.token, changePasswordViewModel.oldPassword.value!!, changePasswordViewModel.newPassword.value!!)
+                    }
                 }
                 401 -> {
                     Log.i("INFO", "Nespravny token")

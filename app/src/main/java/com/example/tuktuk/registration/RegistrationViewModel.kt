@@ -6,7 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.tuktuk.database.DataRepository
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -112,7 +112,7 @@ class RegistrationViewModel(
     fun validateEmail(mail: String): String {
         isEmailValid.postValue(false)
         if (mail.isNotEmpty()) {
-            val responseCheck = checkExistUserByEmail(mail)
+            val responseCheck = runBlocking { checkExistUserByEmail(mail)}
             if (!checkEmailValid(mail)) {
                 return "E-mailova adresa nema spravny tvar"
             }
@@ -130,7 +130,7 @@ class RegistrationViewModel(
     fun validateName(username: String): String {
         isNameValid.postValue(false)
         if (username.isNotEmpty()) {
-            val responseCheck = checkExistUserByUsername(username)
+            val responseCheck = runBlocking { checkExistUserByUsername(username)}
             if (responseCheck) {
                 return "Meno je uz pouzite"
             }
@@ -172,20 +172,12 @@ class RegistrationViewModel(
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun checkExistUserByEmail(email: String): Boolean {
-        var response = false
-        viewModelScope.launch {
-            response = repository.checkExistUserByEmail(email)
-        }
-        return response
+    private suspend fun checkExistUserByEmail(email: String): Boolean {
+        return viewModelScope.async { repository.checkExistUserByEmail(email) }.await()
     }
 
-    private fun checkExistUserByUsername(username: String): Boolean {
-        var response = false
-        viewModelScope.launch {
-            response = repository.checkExistUserByUsername(username)
-        }
-        return response
+    private suspend fun checkExistUserByUsername(username: String): Boolean {
+        return viewModelScope.async { repository.checkExistUserByUsername(username) }.await()
     }
 
 }
