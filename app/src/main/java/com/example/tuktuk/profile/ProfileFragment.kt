@@ -82,23 +82,9 @@ class ProfileFragment : Fragment() {
 
         binding.apply {
             profileImage.setOnClickListener(View.OnClickListener {
-                onPause()
                 ProfileDialogFragment().show(fragmentManager, "ProfileDialogFragment")
             })
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.imageUrl = imageName
-        Log.i("INFO", "ZAVOLALO SA RESUME")
-        info(SharedPreferences.token)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.imageUrl = null
-        Log.i("INFO", "ZAVOLALO SA PAUSE")
     }
 
     private fun info(token: String) {
