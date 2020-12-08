@@ -19,6 +19,7 @@ import com.example.tuktuk.registration.RegistrationViewModel
 import com.example.tuktuk.util.Injection
 import com.example.tuktuk.util.SharedPreferences
 import kotlinx.coroutines.*
+import okhttp3.internal.wait
 
 class ChangePasswordFragment : Fragment() {
 
@@ -62,20 +63,20 @@ class ChangePasswordFragment : Fragment() {
         })
 
         binding.passwordCheckButton.setOnClickListener {
-            info(SharedPreferences.token)
+//            info(SharedPreferences.token)
             passwordChange(SharedPreferences.token, changePasswordViewModel.oldPassword.value!!, changePasswordViewModel.newPassword.value!!)
         }
 
         binding.toProfileButton.setOnClickListener@Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
-            info(SharedPreferences.token)
+//            info(SharedPreferences.token)
             view?.findNavController()?.navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }
     }
 
     private fun passwordChange(token: String, oldPassword: String, newPassword: String) {
         GlobalScope.launch {
-            val responseAuth: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
+//            val responseAuth: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
 
             val response: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.passwordChange("password", token, oldPassword, newPassword)}
             when (response.await()) {

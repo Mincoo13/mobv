@@ -1,5 +1,6 @@
 package com.example.tuktuk.login
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.tuktuk.database.*
@@ -12,12 +13,22 @@ class LoginViewModel(
     val name = ObservableField<String>("")
     val password = ObservableField<String>("")
 
+    private val _inputResponse: MutableLiveData<String> = MutableLiveData()
+    val inputResponse: LiveData<String>
+        get() = _inputResponse
+
     init {
     }
 
 
     suspend fun userLogin(action: String, name: String, password: String): Int{
-        return repository.userLogin(action, name, password)
+        val response = repository.userLogin(action, name, password)
+        if (response == 401) {
+            Log.i("INFO", "ZLEEEEEEEEEEEEEEEE HESLO")
+            _inputResponse.postValue("Zadané nesprávne údaje.")
+            Log.i("INFO", _inputResponse.value.toString())
+        }
+        return response
     }
 
     suspend fun userExists(action: String, name: String): Int {
