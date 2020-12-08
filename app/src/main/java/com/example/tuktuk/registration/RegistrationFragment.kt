@@ -133,7 +133,7 @@ class RegistrationFragment : Fragment() {
                     }
                     val codeRegister = responseRegister.await()
                     if (codeRegister == 200) {
-                        view?.findNavController()?.navigate(R.id.loginFragment)
+                        view?.findNavController()?.navigate(R.id.action_registrationFragment_to_loginFragment)
                     } else {
                         binding.messageRegister.text = "Pouzivatel s tymto menom uz existuje."
                         Log.i("INFO", "code err register")

@@ -29,7 +29,9 @@ class VideoGridAdapter(private val repository: DataRepository, private val homeV
 
         private fun getScreenHeight(): Int {
             val px = Resources.getSystem().displayMetrics.heightPixels
-            return px
+            val statusBarId = Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android")
+            val statusBarHeight = Resources.getSystem().getDimensionPixelSize(statusBarId)
+            return (px - statusBarHeight)
         }
         val shareBtn: ImageView = binding.shareBtn
         val deleteBtn: ImageView = binding.deleteBtn

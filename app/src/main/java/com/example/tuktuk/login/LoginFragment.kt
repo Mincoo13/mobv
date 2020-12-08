@@ -73,6 +73,7 @@ class LoginFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun login(name: String, password: String){
         GlobalScope.launch {
             val responseExists: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userExists("exists", name)}
@@ -87,6 +88,7 @@ class LoginFragment : Fragment() {
                             view?.findNavController()?.navigate(R.id.action_loginFragment_to_homeFragment)
                         }
                         401 -> {
+                            binding.inputResponse.text = "Nesprávne zadané údaje."
                             Log.i("INFO", "Nespravne zadane udaje.")
                         }
                         500 -> {
