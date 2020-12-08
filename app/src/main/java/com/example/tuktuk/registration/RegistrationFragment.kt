@@ -42,8 +42,8 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var registrationViewModel: RegistrationViewModel
     private lateinit var binding: FragmentRegistrationBinding
-    private lateinit var cache: LocalCache
     var textview_date: TextView? = null
+
     @RequiresApi(Build.VERSION_CODES.N)
     var cal = Calendar.getInstance()!!
     //helper global variable
@@ -66,7 +66,6 @@ class RegistrationFragment : Fragment() {
           .get(RegistrationViewModel::class.java)
       binding.registrationViewModel = registrationViewModel
 
-      cache = Injection.provideCache(context!!)
       val animDrawable = binding.registrationLayout.background as AnimationDrawable
       animDrawable.setEnterFadeDuration(10)
       animDrawable.setExitFadeDuration(2000)
@@ -136,20 +135,16 @@ class RegistrationFragment : Fragment() {
                         view?.findNavController()?.navigate(R.id.action_registrationFragment_to_loginFragment)
                     } else {
                         binding.messageRegister.text = "Pouzivatel s tymto menom uz existuje."
-                        Log.i("INFO", "code err register")
                     }
                 }
                 409 -> {
                     binding.messageRegister.text = "Pouzivatel s tymto menom uz existuj."
-                    Log.i("INFO", "Pouzivatel existuje.")
                 }
                 500 -> {
                     binding.messageRegister.text = "Nastala neocakavana chyba."
-                    Log.i("INFO", "Nastala neocakavana chyba.")
                 }
                 else -> {
                     binding.messageRegister.text = "Nastala neocakavana chyba."
-                    Log.i("INFO", "Nastala naozaj neocakavana chyba.")
                 }
             }
         }

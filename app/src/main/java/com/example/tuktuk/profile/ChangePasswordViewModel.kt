@@ -63,11 +63,9 @@ class ChangePasswordViewModel(
             if (it.isNotEmpty()) {
                 if (newPasswordCheck.value.toString() != it) {
                     _newPasswordCheckResponse.postValue("Heslá sa nezhodujú")
-                    Log.i("INFO", "Hesla sa nezhoduju")
                 }
                 else if(it == oldPassword.value.toString()) {
                     _newPasswordCheckResponse.postValue("Nové heslo nesmie byť rovnaké ako staré heslo")
-                    Log.i("INFO", "Nové heslo nesmie byť rovnaké ako staré heslo")
                 }
                 else {
                     isNewPasswordValid.postValue(true)
@@ -76,7 +74,6 @@ class ChangePasswordViewModel(
             }
             else {
                 _newPasswordCheckResponse.postValue("Musite vyplnit heslo")
-                Log.i("INFO", "Heslo nie je vyplnene")
             }
         }
     }

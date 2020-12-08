@@ -26,29 +26,6 @@ class HomeViewModel(
     val videos: LiveData<List<VideosResponse>>
         get() = _videos
 
-//    private val _response = MutableLiveData<String>()
-//
-//    val videos: LiveData<List<VideosResponse>>
-//        get() = _videos
-
-////    var videos = getUsers()
-//    fun getUsers(): LiveData<List<VideosResponse>>? {
-//        _videos.postValue(loadUsers())
-//        Log.i("INFO", "videos")
-//        Log.i("INFO", _videos.value.toString())
-//        return _videos
-//    }
-
-//    val videos: LiveData<List<VideosResponse>>
-//        get() = _videos
-
-    private fun loadUsers(): List<VideosResponse> {
-        var videos: List<VideosResponse> = ArrayList()
-        viewModelScope.launch {
-            videos = repository.getVideos()!!
-        }
-        return videos
-    }
     init {
         getVideos()
     }

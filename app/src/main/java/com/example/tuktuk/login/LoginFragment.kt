@@ -28,7 +28,6 @@ class LoginFragment : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var cache: LocalCache
 
     @SuppressLint("UseRequireInsteadOfGet")
     override fun onCreateView(
@@ -48,7 +47,6 @@ class LoginFragment : Fragment() {
         loginViewModel = ViewModelProvider(this, Injection.provideLoginViewModelFactory(context!!))
             .get(LoginViewModel::class.java)
 
-        cache = Injection.provideCache(context!!)
         val animDrawable = binding.loginLayout.background as AnimationDrawable
         animDrawable.setEnterFadeDuration(10)
         animDrawable.setExitFadeDuration(2000)
@@ -80,33 +78,23 @@ class LoginFragment : Fragment() {
             when (responseExists.await()) {
                 409 -> {
                     val response: Deferred<Int> = async (Dispatchers.IO) {loginViewModel.userLogin("login", name, password)}
-                    Log.i("INFO", "PRIHLASOVANIE $name $password")
-                    Log.i("INFO", response.await().toString())
                     when (response.await()) {
                         200 -> {
-                            Log.i("INFO", "Pouzivatel prihlaseny.")
                             view?.findNavController()?.navigate(R.id.action_loginFragment_to_homeFragment)
                         }
                         401 -> {
                             binding.inputResponse.text = "Nesprávne zadané údaje."
-                            Log.i("INFO", "Nespravne zadane udaje.")
-                        }
-                        500 -> {
-                            Log.i("INFO", "Nastala neocakavana chyba.")
                         }
                         else -> {
-                            Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                            binding.inputResponse.text = "Nastala neocakavana chyba, skuste akciu zopakovat."
                         }
                     }
                 }
                 200 -> {
-                    Log.i("INFO", "Pouzivatel neexistuje.")
-                }
-                500 -> {
-                    Log.i("INFO", "Nastala neocakavana chyba.")
+                    binding.inputResponse.text = "Pouzivatel neexistuje."
                 }
                 else -> {
-                    Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                    binding.inputResponse.text = "Nastala neocakavana chyba, skuste akciu zopakovat."
                 }
             }
         }

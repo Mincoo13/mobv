@@ -22,8 +22,6 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,26 +29,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.example.tuktuk.R
 import com.example.tuktuk.network.responses.VideosResponse
-import com.example.tuktuk.util.SharedPreferences
-import kotlinx.android.synthetic.main.fragment_profile.view.*
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<VideosResponse>?) {
     val adapter = recyclerView.adapter as VideoGridAdapter
     adapter.submitList(data)
 }
-
-//@BindingAdapter("imageUrl")
-//fun bindProfileImage(imgView: ImageView, imgUrl: String?) {
-//        val imgUri = "http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image
-//        Glide.with(imgView.context)
-//            .load(imgUri)
-//            .placeholder(R.drawable.blank_profile_picture_973460_640)
-//            .error(R.drawable.blank_profile_picture_973460_640)
-//            .diskCacheStrategy(DiskCacheStrategy.NONE)
-//            .skipMemoryCache(true)
-//            .into(imgView)
-//}
 
 @BindingAdapter("profile")
 fun bindProfile(view: ImageView, profileSrc: String?) {
@@ -63,14 +47,14 @@ fun bindProfile(view: ImageView, profileSrc: String?) {
         imgUri = Uri.parse("android.resource://" + view.context.packageName + "/drawable/blank_profile_picture_973460_640")
         Log.i("profilePic", imgUri.toString())
     }
-            Glide.with(view.context)
-                .load(imgUri)
-                .apply(
-                    RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .signature(ObjectKey(System.currentTimeMillis().toString()))
-                        .placeholder(R.drawable.blank_profile_picture_973460_640)
-                        .error(R.drawable.blank_profile_picture_973460_640)
-                )
-                .into(view)
+    Glide.with(view.context)
+        .load(imgUri)
+        .apply(
+            RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
+                .placeholder(R.drawable.blank_profile_picture_973460_640)
+                .error(R.drawable.blank_profile_picture_973460_640)
+        )
+        .into(view)
 }

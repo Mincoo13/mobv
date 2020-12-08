@@ -69,7 +69,6 @@ class HomeFragment : Fragment() {
     /*VIDEO*/
     private fun recordVideo(){
         videoFile = createVideoFile()
-        Log.i("Info", this.requireContext().toString())
         if(videoFile !=null){
             videoUri= FileProvider.getUriForFile(
                 this.requireContext(),
@@ -98,10 +97,8 @@ class HomeFragment : Fragment() {
             val response: Deferred<Int> = async (Dispatchers.IO) {homeViewModel.userInfo("userProfile", token)}
             when (response.await()) {
                 200 -> {
-                    Log.i("INFO", "Podarilo sa")
                 }
                 401 -> {
-                    Log.i("INFO", "Nespravny token")
                     view?.findNavController()?.navigate(R.id.loginFragment)
                 }
             }
@@ -117,7 +114,6 @@ class HomeFragment : Fragment() {
             ".mp4",
             storageDir)
         return file
-
     }
 
     private fun uploadVideo() {
@@ -127,17 +123,10 @@ class HomeFragment : Fragment() {
             ) }
             when (responseExists.await()) {
                 200 -> {
-                    Log.i("INFO", "Video bolo uploadnute.")
                     updateVideos()
                 }
-                409 -> {
-                    Log.i("INFO", "Pouzivatel existuje.")
-                }
-                500 -> {
-                    Log.i("INFO", "Nastala neocakavana chyba.")
-                }
                 else -> {
-                    Log.i("INFO", "Nastala naozaj neocakavana chyba.")
+                    Log.i("INFO", "Nastala neocakavana chyba.")
                 }
             }
         }
@@ -160,7 +149,6 @@ class HomeFragment : Fragment() {
         vAdapter!!.SetOnVideoClickListener(object: VideoGridAdapter.OnVideoClickListener {
             override fun onVideoClick(position: Int) {
                 PlayerViewAdapter.pauseAndPlayCurrentPlayingVideo(position)
-                Log.i("INFO", "tuuuu")
             }
         })
     }

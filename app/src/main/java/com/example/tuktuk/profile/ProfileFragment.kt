@@ -55,16 +55,13 @@ class ProfileFragment : Fragment() {
         binding.usernameProfile.text = SharedPreferences.username
         imageName = SharedPreferences.image
         binding.imageUrl = imageName
-        Log.i("INFO", "ZAVOLALO SA ON CREATE") //       var imageView: CircleImageView = binding.profileImage
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("INFO", "ZAVOLALO SA ON VIEW CREATED")
         binding.logOutButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
-            Log.i("INFO", SharedPreferences.refresh)
             logout(SharedPreferences.refresh)
         }
 
@@ -92,10 +89,9 @@ class ProfileFragment : Fragment() {
             val response: Deferred<Int> = async (Dispatchers.IO) {profileViewModel.userInfo("userProfile", token)}
             when (response.await()) {
                 200 -> {
-                    Log.i("INFO", "Podarilo sa")
+                    Log.i("INFO", "Podarilo sa prihlasit")
                 }
                 401 -> {
-                    Log.i("INFO", "Nespravny token")
                     view?.findNavController()?.navigate(R.id.loginFragment)
                 }
             }
@@ -106,15 +102,12 @@ class ProfileFragment : Fragment() {
     private fun logout(refresh: String) {
         GlobalScope.launch {
             val response: Deferred<Int> = async (Dispatchers.IO) {profileViewModel.userLogout("refreshToken", refresh)}
-            SharedPreferences.isLogin = false
-            view?.findNavController()?.navigate(R.id.action_profileFragment_to_loginFragment)
             when (response.await()) {
                 200 -> {
-                    Log.i("INFO", refresh)
-                    Log.i("INFO", "Odhlaseny")
+                    SharedPreferences.isLogin = false
+                    view?.findNavController()?.navigate(R.id.action_profileFragment_to_loginFragment)
                 }
                 else -> {
-                    Log.i("INFO", refresh)
                     Log.i("INFO", "Chyba")
                 }
             }

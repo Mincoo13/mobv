@@ -24,7 +24,6 @@ class ProfileViewModel(
     }
 
     suspend fun userLogout(action: String, refresh: String): Int {
-        Log.i("INFO", refresh)
         return repository.tokenRefresh(action, refresh, "logout")
     }
 

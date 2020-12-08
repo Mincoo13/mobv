@@ -107,19 +107,9 @@ class ProfileDialogFragment: DialogFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             val uri: Uri? = data?.data
-            Log.i("INFO", "CESTA")
-            Log.i("INFO", uri.toString())
-//            if (uri != null) {
-//                requireContext().getContentResolver().openInputStream(uri)?.bufferedReader()?.forEachLine {
-//                    val toast = Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT)
-//                    toast.show()
-//                }
-//            }
             val uriString = uri.toString()
             var filePath = context?.let { data.getFilePath(it) }
 
-            Log.i("INFO", "CESTA K IMG")
-            Log.i("INFO", filePath.toString())
             var file = File(filePath)
             val value = uriString.replace("content://", "")
 
@@ -144,7 +134,6 @@ class ProfileDialogFragment: DialogFragment() {
                 }
             }
 
-            Log.v("INFO", uri.toString())
             SharedPreferences.image = uri.toString()
         }
     }

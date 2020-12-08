@@ -75,8 +75,6 @@ class ChangePasswordFragment : Fragment() {
 
     private fun passwordChange(token: String, oldPassword: String, newPassword: String) {
         GlobalScope.launch {
-//            val responseAuth: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.userInfo("userProfile", token)}
-
             val response: Deferred<Int> = async (Dispatchers.IO) {changePasswordViewModel.passwordChange("password", token, oldPassword, newPassword)}
             when (response.await()) {
                 200 -> {

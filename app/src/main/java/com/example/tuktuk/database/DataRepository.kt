@@ -52,14 +52,11 @@ class DataRepository(
             if (response.isSuccessful) {
                 response.body()?.let {
                     cache.insertUser(gson.fromJson(response.body()!!))
-                    Log.i("INFO", "# USER")
-                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                 }
                 return response.code()
             }
 
         } catch (ex: ConnectException){
-            Log.i("ERROR", "Problem s pripojenim k internetu.")
             ex.printStackTrace()
         }
         return responseCode
@@ -72,10 +69,6 @@ class DataRepository(
         username: String): Int {
         try {
             val response = api.userExists(UserExistsRequest(action, Api.api_key, username))
-            Log.i("INFO", "eserExist")
-            Log.i("INFO", response.body().toString())
-            Log.i("INFO", response.toString())
-            Log.i("INFO", response.code().toString())
             if (response.isSuccessful) {
                 if (response.body()!!.exists) {
                     return 409
@@ -98,14 +91,9 @@ class DataRepository(
         Api.setAuth(false)
         try {
             val response = api.userLogin(LoginRequest(action, Api.api_key, username, password))
-            Log.i("INFO", "LOGIN")
-            Log.i("INFO", response.toString())
-            Log.i("INFO", username)
-            Log.i("INFO", password)
             if(response.isSuccessful) {
                 return if(response.body() == null) {
-                    Log.i("INFO", "BAD CREDENTIALS")
-                    401
+                    return 401
                 } else {
                     SharedPreferences.token = response.body()!!.token
                     SharedPreferences.email = response.body()!!.email
@@ -113,17 +101,11 @@ class DataRepository(
                     SharedPreferences.profile = response.body()!!.token
                     SharedPreferences.username = response.body()!!.username
                     SharedPreferences.isLogin = true
-//                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
-//                    cache.updateUser(gson.fromJson(response.body()!!))
-
-                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
                     response.code()
                 }
             }
-            Log.i("INFO", "Stala sa velmi skareda vec")
             return responseCode
         } catch (ex: Exception){
-            Log.i("INFO", ex.toString())
             return 401
         }
 
@@ -135,39 +117,19 @@ class DataRepository(
         oldPassword: String,
         newPassword: String): Int {
         try {
-//            var responseRefresh = tokenRefresh("refreshToken", SharedPreferences.refresh, "password")
-//            var responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, SharedPreferences.token))
-            Log.i("INFO", "ZMENA HESLA stare")
-            Log.i("INFO", oldPassword)
-            Log.i("INFO", "ZMENA HESLA nove")
-            Log.i("INFO", newPassword)
             val response = api.passwordChange(PasswordChangeRequest(action, Api.api_key, token, oldPassword, newPassword))
-            Log.i("INFO", response.toString())
-            Log.i("INFO", PasswordChangeRequest(action, Api.api_key, SharedPreferences.token, oldPassword, newPassword).toString())
-//            responseUser = api.userInfo(InfoRequest("userProfile", Api.api_key, token))
-//            Log.i("INFO", responseUser.body()!!.token)
-//            Log.i("INFO", SharedPreferences.token)
             if(response.isSuccessful) {
                 return if(response.body() == null) {
-                    Log.i("INFO", "BAD CREDENTIALS")
-                    401
+                    return 401
                 } else {
-
-//                    SharedPreferences.isLogin = true
-//                    Log.i("INFO", cache.getUser(response.body()!!.id).toString())
-//                    cache.updateUser(gson.fromJson(response.body()!!))
-                    Log.i("INFO", "ZMENA HESLA SA USPESNE PODARILA")
-                    Log.i("INFO", response.body().toString())
                     SharedPreferences.token = response.body()!!.token
                     SharedPreferences.refresh = response.body()!!.refresh
                     SharedPreferences.isLogin = true
                     response.code()
                 }
             }
-            Log.i("INFO", "Stala sa velmi skareda vec")
             return response.code()
         } catch (ex: Exception){
-            Log.i("INFO", ex.toString())
             return 401
         }
 
@@ -177,14 +139,7 @@ class DataRepository(
         action: String,
         token: String): Int {
         val response = api.userInfo(InfoRequest(action, Api.api_key, token))
-        Log.i("INFO", "INFO REFRESH")
-//        Log.i("INFO", response.body()!!.refresh)
-//        val response2 = api.tokenRefresh(RefreshRequest(action, Api.api_key, response.body()!!.refresh))
-//        Log.i("INFO", response2.code().toString())
-//        Log.i("INFO", api.tokenRefresh(RefreshRequest("refreshToken", Api.api_key, response.body()!!.refresh)).body().toString())
         if(response.isSuccessful) {
-            Log.i("INFO", "Udaje o pouzivatelovi")
-            Log.i("INFO", response.body().toString())
             SharedPreferences.token = response.body()!!.token
             SharedPreferences.email = response.body()!!.email
             SharedPreferences.refresh = response.body()!!.refresh
@@ -192,13 +147,9 @@ class DataRepository(
             SharedPreferences.username = response.body()!!.username
             SharedPreferences.image = response.body()!!.profile
             SharedPreferences.isLogin = true
-//            Log.i("INFO", response.body().toString())
-
             return response.code()
         }
         else {
-            Log.i("INFO", "USER INFO ZLY TOKEN")
-            Log.i("INFO", response.code().toString())
             SharedPreferences.token = ""
             SharedPreferences.email = ""
             SharedPreferences.refresh = ""
@@ -208,8 +159,6 @@ class DataRepository(
             SharedPreferences.isLogin = false
             return response.code()
         }
-//        Log.i("INFO", "Nieco nepravdepoodbne")
-//        return responseCode
 
     }
 
@@ -217,13 +166,9 @@ class DataRepository(
         action: String,
         refresh: String,
         intent: String): Int {
-        Log.i("INFO", "-----")
-        Log.i("INFO", refresh)
-        Log.i("INFO", "-----")
         val response = api.tokenRefresh(RefreshRequest(action, Api.api_key, refresh))
         if (response.isSuccessful) {
             if (intent == "logout") {
-                Log.i("INFO", "Odhlasenie sa podarilo")
                 SharedPreferences.token = ""
                 SharedPreferences.email = ""
                 SharedPreferences.refresh = ""
@@ -240,9 +185,6 @@ class DataRepository(
             }
 
         }
-
-        Log.i("INFO", "Odhlasenie sa nepodarilo")
-        Log.i("INFO", response.code().toString())
         return responseCode
     }
 
@@ -255,11 +197,9 @@ class DataRepository(
             val response = api.userNameExists(UserExistsRequest(action, Api.api_key, username))
             if (response.isSuccessful) {
                 if (response.body()!!.exists) {
-                    Log.i("INFO", "Pouzivatel existuje")
                     return 409
                 }
                 else {
-                    Log.i("INFO", "Pouzivatel neexistuje")
                     return response.code()
                 }
             }
@@ -277,31 +217,7 @@ class DataRepository(
         token: String,
         context: Context
     ): Int {
-
-
-
         val file = File(fileUri.getPath())
-        Log.i("INFO", fileUri.toString())
-        Log.i("INFO", file.toString())
-//           Log.i("INFO", file.readBytes().toString())
-
-        // val inputStream = context.getContentResolver().openInputStream(Uri.fromFile(file))
-//        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-            //body = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-
-//        var myHeaders = Headers
-//
-//        myHeaders.headersOf("Content-Disposition", "form-data; name=\"image\"; filename=\"image.jpg\"")
-//        myHeaders.headersOf("Content-Type", "image/jpeg")
-
-//        val mpart = MultipartBody.Builder().addPart(null, requestFile)
-
-//        val map = mapOf("Content-Disposition" to "form-data; name=\"image\"; filename=\"image.jpg\"",
-//            "Content-Type" to "image/jpeg")
-//        println(map) // {1=x, 2=y, -1=zz}
-
-
         val outputJson: String = Gson().toJson(ImageRequest(Api.api_key, token))
         val data = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
         val dataPart = MultipartBody.Part.create(
@@ -312,7 +228,6 @@ class DataRepository(
             data
         )
 
-        Log.i("INFO", file.absolutePath.toString())
         val image = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
         val imagePart = MultipartBody.Part.create(
             headersOf(
@@ -321,25 +236,11 @@ class DataRepository(
             ),
             image
         )
-
-//        val body2 = RequestBody.create("application/json".toMediaTypeOrNull(), outputJson)
-//        Log.i("INFO", outputJson.toString())
-
-
         val response = api.uploadImage(imagePart, dataPart)
         if (response.isSuccessful) {
-            Log.i("INFO", "Profilova fotka bola uspesne nahrata")
-//            SharedPreferences.token = ""
-//            SharedPreferences.email = ""
-//            SharedPreferences.refresh = ""
-//            SharedPreferences.profile = ""
-//            SharedPreferences.username = ""
-//            SharedPreferences.isLogin = false
             return response.code()
         }
 
-        Log.i("INFO", "Profilova fotka sa nepodarila nahrat")
-        Log.i("INFO", response.code().toString())
         return response.code()
     }
 
@@ -348,24 +249,17 @@ class DataRepository(
         token: String): Int {
         try {
             val response = api.removeImage(RemoveImageRequest(action, Api.api_key, token))
-//            Log.i("INFO", "LOGIN")
-//            Log.i("INFO", response.toString())
             if(response.isSuccessful) {
-                Log.i("INFO", response.body().toString())
                 when (response.code()) {
                     200 -> {
-                        Log.i("INFO", "Profilova fotka uspesne zmazana")
                         SharedPreferences.image = ""
                         return response.code()
                     }
                     else -> {
-                        Log.i("INFO", "Nepodarilo sa profilovu fotku zmazat")
-                        Log.i("INFO", response.code().toString())
                         return response.code()
                     }
                 }
             }
-            Log.i("INFO", "Nastala chyba.")
             return responseCode
         } catch (ex: Exception){
             Log.i("INFO", ex.toString())
@@ -403,39 +297,28 @@ class DataRepository(
         val response = api.uploadVideo(imagePart, dataPart)
 
         if (response.isSuccessful) {
-            Log.i("INFO", "Video bolo uspesne nahrate")
             return response.code()
         }
 
-        Log.i("INFO", "Video sa nepodarilo nahrat")
         return response.code()
     }
 
     suspend fun removeVideo(
         video_id: Int): Int {
         try {
-            Log.i("INFO", "### VYMAZAVANIE ##")
-            Log.i("INFO", video_id.toString())
             val response = api.removeVideo(RemoveVideoRequest("deletePost", Api.api_key, SharedPreferences.token, video_id))
-            Log.i("INFO", response.toString())
-            Log.i("INFO", response.body().toString())
             if(response.isSuccessful) {
                 when (response.code()) {
                     200 -> {
-                        Log.i("INFO", "Video uspesne zmazane")
                         return response.code()
                     }
                     else -> {
-                        Log.i("INFO", "Nepodarilo sa zmazat video")
-                        Log.i("INFO", response.code().toString())
                         return response.code()
                     }
                 }
             }
-            Log.i("INFO", "Nastala chyba.")
             return responseCode
         } catch (ex: Exception){
-            Log.i("INFO", ex.toString())
             return responseCode
         }
 

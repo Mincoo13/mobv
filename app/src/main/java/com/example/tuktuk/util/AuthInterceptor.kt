@@ -10,17 +10,11 @@ class AuthInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        Log.i("TAG_API", "sending request")
-
         val request = chain.request()
             .newBuilder()
             .addHeader("Cache-Control","no-cache")
             .addHeader("Accept","application/json")
             .addHeader("Content-Type","application/json")
-
-        if (useAuth) {
-
-        }
 
         return chain.proceed(request.build())
     }

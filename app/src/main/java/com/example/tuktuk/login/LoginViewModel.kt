@@ -24,9 +24,7 @@ class LoginViewModel(
     suspend fun userLogin(action: String, name: String, password: String): Int{
         val response = repository.userLogin(action, name, password)
         if (response == 401) {
-            Log.i("INFO", "ZLEEEEEEEEEEEEEEEE HESLO")
             _inputResponse.postValue("Zadané nesprávne údaje.")
-            Log.i("INFO", _inputResponse.value.toString())
         }
         return response
     }
