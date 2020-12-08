@@ -18,6 +18,7 @@ import com.example.tuktuk.R
 import com.example.tuktuk.database.DataRepository
 import com.example.tuktuk.databinding.MediaObjectBinding
 import com.example.tuktuk.network.responses.VideosResponse
+import com.example.tuktuk.util.SharedPreferences
 import com.google.android.exoplayer2.SimpleExoPlayer
 import kotlinx.android.synthetic.main.media_object.view.*
 import com.squareup.picasso.MemoryPolicy
@@ -40,6 +41,10 @@ class VideoGridAdapter(private val repository: DataRepository) : ListAdapter<Vid
         val deleteBtn: ImageView = binding.deleteBtn
 
         fun bind(video: VideosResponse) {
+
+            if (SharedPreferences.image != video.profile) {
+                binding.deleteBtn.visibility = View.INVISIBLE
+            }
 
             var imageView: CircleImageView = binding.profileImage
             Picasso.get()
