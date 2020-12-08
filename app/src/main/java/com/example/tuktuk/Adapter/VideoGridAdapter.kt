@@ -17,6 +17,7 @@ import com.example.tuktuk.databinding.MediaObjectBinding
 import com.example.tuktuk.home.HomeViewModel
 import com.example.tuktuk.network.responses.VideosResponse
 import com.example.tuktuk.util.SharedPreferences
+import com.google.android.exoplayer2.ui.PlayerView
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -24,6 +25,8 @@ import kotlinx.coroutines.*
 
 
 class VideoGridAdapter(private val repository: DataRepository, private val homeViewModel: HomeViewModel) : ListAdapter<VideosResponse, VideoGridAdapter.VideoViewHolder>(DiffCallback) {
+
+    private var videoClickListener: OnVideoClickListener? = null
 
     inner class VideoViewHolder(private var binding: MediaObjectBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -50,12 +53,29 @@ class VideoGridAdapter(private val repository: DataRepository, private val homeV
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(imageView)
 
+            binding.root.setOnClickListener {
+                videoClickListener!!.onVideoClick(
+                    adapterPosition
+                )
+            }
+
             binding.videoView.layoutParams.height = getScreenHeight()
             binding.video = video
             binding.index = adapterPosition
             binding.executePendingBindings()
         }
     }
+
+    fun SetOnVideoClickListener(videoClickListener: OnVideoClickListener?) {
+        this.videoClickListener = videoClickListener
+    }
+
+    interface OnVideoClickListener {
+        fun onVideoClick(
+            position: Int
+        )
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         return VideoViewHolder(MediaObjectBinding.inflate(LayoutInflater.from(parent.context)))

@@ -156,6 +156,13 @@ class HomeFragment : Fragment() {
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = vAdapter
+
+        vAdapter!!.SetOnVideoClickListener(object: VideoGridAdapter.OnVideoClickListener {
+            override fun onVideoClick(position: Int) {
+                PlayerViewAdapter.pauseAndPlayCurrentPlayingVideo(position)
+                Log.i("INFO", "tuuuu")
+            }
+        })
     }
 
     override fun onPause() {

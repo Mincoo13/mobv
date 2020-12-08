@@ -3,6 +3,7 @@ package com.example.tuktuk.Adapter
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -29,8 +30,23 @@ class PlayerViewAdapter {
             }
         }
 
+        fun setPlayWhenReadyAllPlayers(value: Boolean){
+            playersMap.map {
+                it.value.playWhenReady = value
+            }
+        }
+
         fun releaseRecycledPlayers(index: Int){
             playersMap[index]?.release()
+        }
+
+        fun pauseAndPlayCurrentPlayingVideo(position: Int){
+            if (playersMap.get(position)?.playWhenReady == false) {
+                setPlayWhenReadyAllPlayers(false)
+                playersMap.get(position)?.playWhenReady = true
+            } else {
+                setPlayWhenReadyAllPlayers(false)
+            }
         }
 
         @JvmStatic
@@ -39,7 +55,7 @@ class PlayerViewAdapter {
 
             val player = SimpleExoPlayer.Builder(context).build()
 
-            player.playWhenReady = true
+            player.playWhenReady = false
             player.repeatMode = Player.REPEAT_MODE_ALL
             setKeepContentOnPlayerReset(true)
             this.useController = false
