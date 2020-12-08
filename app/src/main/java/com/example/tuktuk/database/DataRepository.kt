@@ -49,12 +49,6 @@ class DataRepository(
         Api.setAuth(false)
         try {
             val response = api.userRegister(UserRequest(action, Api.api_key, username, email, password))
-            Log.i("INFO", response.toString())
-            Log.i("INFO", "----------------------------")
-            Log.i("INFO", username)
-            Log.i("INFO", password)
-//            Log.i("INFO", response.body()!!.toString())
-//            Log.i("INFO", response.body()!!.email)
             if (response.isSuccessful) {
                 response.body()?.let {
                     Log.i("INFO", "INSERT TO DATABASE")
@@ -455,11 +449,7 @@ class DataRepository(
     suspend fun getVideos(): List<VideosResponse>? {
         val response = api.getVideos(AllVideosRequest("posts", Api.api_key, SharedPreferences.token))
         if(response.isSuccessful) {
-            val videos = response.body()
-            videos?.dropWhile {
-                (it.username == "newuser111" || it.username == "newuser222")
-            }
-            return videos
+            return response.body()
         }
 
         return ArrayList()
