@@ -7,6 +7,9 @@
         <variable
             name="profileViewModel"
             type="com.example.tuktuk.profile.ProfileViewModel" />
+        <variable
+            name="imageUrl"
+            type="String" />
     </data>
 
     <FrameLayout
@@ -84,7 +87,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:imageUrl="@{profileViewModel.imgSrcUrl}"/>
+                app:profile="@{imageUrl}"/>
 
             <TextView
                 android:id="@+id/usernameProfile"

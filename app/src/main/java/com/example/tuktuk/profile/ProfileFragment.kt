@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -27,6 +28,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentProfileBinding
     private lateinit var cache: LocalCache
+    private lateinit var imageName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,15 +53,9 @@ class ProfileFragment : Fragment() {
 
         binding.emailProfile.text = SharedPreferences.email
         binding.usernameProfile.text = SharedPreferences.username
-
+        imageName = SharedPreferences.image
+        binding.imageUrl = imageName
         Log.i("INFO", "ZAVOLALO SA ON CREATE") //       var imageView: CircleImageView = binding.profileImage
-//         Picasso.get()
-//            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
-//            .placeholder(R.drawable.blank_profile_picture_973460_640)
-//            .error(R.drawable.blank_profile_picture_973460_640)
-//            .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
-//            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-//            .into(imageView)
         return binding.root
     }
 
@@ -94,29 +90,16 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        binding.imageUrl = imageName
         Log.i("INFO", "ZAVOLALO SA RESUME")
         info(SharedPreferences.token)
-        val imageView: CircleImageView = binding.profileImage
-//        Picasso.get()
-//            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
-//            .placeholder(R.drawable.blank_profile_picture_973460_640)
-//            .error(R.drawable.blank_profile_picture_973460_640)
-//            .into(imageView)
     }
 
     override fun onPause() {
         super.onPause()
+        binding.imageUrl = null
         Log.i("INFO", "ZAVOLALO SA PAUSE")
-        info(SharedPreferences.token)
-        val imageView: CircleImageView = binding.profileImage
-//        Picasso.get()
-//            .load("http://api.mcomputing.eu/mobv/uploads/" + SharedPreferences.image)
-//            .placeholder(R.drawable.blank_profile_picture_973460_640)
-//            .error(R.drawable.blank_profile_picture_973460_640)
-//            .into(imageView)
     }
-
 
     private fun info(token: String) {
         GlobalScope.launch {
