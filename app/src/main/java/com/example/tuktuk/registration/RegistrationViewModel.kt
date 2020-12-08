@@ -112,7 +112,7 @@ class RegistrationViewModel(
     fun validateEmail(mail: String): String {
         isEmailValid.postValue(false)
         if (mail.isNotEmpty()) {
-            val responseCheck = runBlocking { checkExistUserByEmail(mail)}
+            val responseCheck = checkExistUserByEmail(mail)
             if (!checkEmailValid(mail)) {
                 return "E-mailova adresa nema spravny tvar"
             }
@@ -130,7 +130,7 @@ class RegistrationViewModel(
     fun validateName(username: String): String {
         isNameValid.postValue(false)
         if (username.isNotEmpty()) {
-            val responseCheck = runBlocking { checkExistUserByUsername(username)}
+            val responseCheck = checkExistUserByUsername(username)
             if (responseCheck) {
                 return "Meno je uz pouzite"
             }
@@ -172,12 +172,12 @@ class RegistrationViewModel(
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private suspend fun checkExistUserByEmail(email: String): Boolean {
-        return viewModelScope.async { repository.checkExistUserByEmail(email) }.await()
+    private fun checkExistUserByEmail(email: String): Boolean {
+        return repository.checkExistUserByEmail(email)
     }
 
-    private suspend fun checkExistUserByUsername(username: String): Boolean {
-        return viewModelScope.async { repository.checkExistUserByUsername(username) }.await()
+    private fun checkExistUserByUsername(username: String): Boolean {
+        return repository.checkExistUserByUsername(username)
     }
 
 }
