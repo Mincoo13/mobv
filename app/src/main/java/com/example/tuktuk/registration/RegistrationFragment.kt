@@ -131,7 +131,7 @@ class RegistrationFragment : Fragment() {
                     val codeRegister = responseRegister.await()
                     if (codeRegister == 200) {
                         Log.i("INFO", "######")
-                        view?.findNavController()?.navigate(R.id.loginFragment)
+                        view?.findNavController()?.navigate(R.id.action_registrationFragment_to_loginFragment)
                     } else {
                         Log.i("INFO", "code err register")
                     }
