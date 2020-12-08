@@ -5,7 +5,9 @@
     >
 
     <data>
-
+        <variable
+            name="loginViewModel"
+            type="com.example.tuktuk.login.LoginViewModel" />
     </data>
 
     <FrameLayout
@@ -65,6 +67,19 @@
                 app:layout_constraintBaseline_toBaselineOf="@+id/nameLoginInput"
                 app:layout_constraintEnd_toStartOf="@+id/nameLoginInput"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/inputResponse"
+                android:layout_width="272dp"
+                android:layout_height="23dp"
+                android:text="@{loginViewModel.inputResponse}"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/colorError"
+                app:layout_constraintBottom_toTopOf="@+id/passwordLoginInput"
+                app:layout_constraintEnd_toEndOf="@+id/passwordLoginInput"
+                app:layout_constraintStart_toStartOf="@+id/passwordLoginInput"
+                app:layout_constraintTop_toBottomOf="@+id/passwordLoginInput"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/loginButton"
