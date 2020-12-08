@@ -1,6 +1,7 @@
 package com.example.tuktuk.profile
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +15,6 @@ class ProfileViewModel(
 ) : ViewModel() {
     val name = ObservableField<String>("")
     val email = ObservableField<String>("")
-    val imgSrcUrl: MutableLiveData<String> = MutableLiveData()
     init {
 
     }
